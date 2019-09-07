@@ -1,7 +1,0 @@
-﻿  Source.cpp
-e:\documents\visual studio 2017\projects\hellosdl\hellosdl\source.cpp(36): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-e:\documents\visual studio 2017\projects\hellosdl\hellosdl\source.cpp(37): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-  Screen.cpp
-e:\documents\visual studio 2017\projects\hellosdl\hellosdl\screen.cpp(9): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Generating Code...
-  HelloSDL.vcxproj -> e:\documents\visual studio 2017\Projects\HelloSDL\x64\Debug\HelloSDL.exe
