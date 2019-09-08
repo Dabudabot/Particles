@@ -134,13 +134,13 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="SwarmHost.cpp" />
+    <ClCompile Include="Swarm.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="Screen.h" />
-    <ClInclude Include="SwarmHost.h" />
+    <ClInclude Include="Swarm.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>

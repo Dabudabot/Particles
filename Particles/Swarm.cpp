@@ -1,4 +1,4 @@
-#include "SwarmHost.h"
+#include "Swarm.h"
 #include "Utils.h"
 
 particle::Particle::Particle(const double x, const double y)

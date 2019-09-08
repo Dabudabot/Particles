@@ -6,6 +6,7 @@ particle::Game::Game()
   swarm_host_ = std::make_unique<SwarmHost>();
   wall_host_ = std::make_unique<WallHost>();
   running_ = true;
+  wall_building_ = false;
 }
 
 int particle::Game::run()
@@ -56,11 +57,49 @@ int particle::Game::run()
 
 bool particle::Game::process_event(SDL_Event& event)
 {
-  //TODO
-
   if (SDL_QUIT == event.type)
   {
     return false;
+  }
+
+  if (wall_building_)
+  {
+    if (SDL_MOUSEBUTTONDOWN == event.type)
+    {
+      switch(event.button.button)
+      {
+      case SDL_BUTTON_LEFT:
+        wall_host_->end_wall(event.button.x, event.button.y);
+        wall_building_ = false;
+        break;
+      case SDL_BUTTON_RIGHT:
+        wall_building_ = false;
+        break;
+      default:
+        break;
+      }
+    } else if(SDL_MOUSEMOTION == event.type)
+    {
+      wall_host_->move_wall(screen_, event.button.x, event.button.y);
+    }
+  }
+  else
+  {
+    if (SDL_MOUSEBUTTONDOWN == event.type)
+    {
+      switch (event.button.button)
+      {
+      case SDL_BUTTON_LEFT:
+        wall_host_->start_wall(event.button.x, event.button.y);
+        wall_building_ = true;
+        break;
+      case SDL_BUTTON_RIGHT:
+        swarm_host_->generate_swarm(event.button.x, event.button.y);
+        break;
+      default:
+        break;
+      }
+    }
   }
 
   return true;

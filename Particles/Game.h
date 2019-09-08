@@ -1,6 +1,6 @@
 #pragma once
 #include "Screen.h"
-#include "SwarmHost.h"
+#include "Swarm.h"
 #include "Wall.h"
 
 #include <memory>
@@ -12,6 +12,8 @@ namespace particle {
     std::unique_ptr<SwarmHost> swarm_host_;
     std::unique_ptr<WallHost> wall_host_;
     bool running_;
+
+    bool wall_building_;
 
     bool process_event(SDL_Event& event);
 
