@@ -14,9 +14,13 @@ namespace particle {
     bool running_;
 
     bool wall_building_;
+    bool show_help_;
+
+    Uint8 help_fade_;
 
     bool process_event(SDL_Event& event);
     void draw_help();
+    void restore_defaults();
 
   public:
 

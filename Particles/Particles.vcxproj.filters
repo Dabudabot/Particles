@@ -48,4 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="clacon.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+  </ItemGroup>
 </Project>

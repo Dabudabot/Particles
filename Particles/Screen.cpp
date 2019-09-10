@@ -1,6 +1,7 @@
 #include "Screen.h"
 #include <ctime>
 #include <cstdlib>
+#include <cstdio>
 
 particle::Screen::Screen() :
 	window_(nullptr),
@@ -14,6 +15,7 @@ particle::Screen::Screen() :
 particle::Screen::~Screen()
 {
 	delete[] buffer_;
+  TTF_Quit();
 	SDL_DestroyTexture(texture_);
 	SDL_DestroyRenderer(renderer_);
 	SDL_DestroyWindow(window_);
@@ -29,9 +31,57 @@ void particle::Screen::set_pixel(const int x, const int y, const Uint32 color) c
   buffer_[(y * screen_width) + x] = color;
 }
 
+void particle::Screen::set_text(
+  const char* text,
+  const SDL_Color color,
+  TTF_Font* font,
+  const int x,
+  const int y) const
+{
+  const auto surface = TTF_RenderText_Solid(font, text, color);
+
+  const auto texture = SDL_CreateTextureFromSurface(renderer_, surface);
+
+  SDL_Rect rect; //create a rect
+  rect.x = x;  //controls the rect's x coordinate 
+  rect.y = y; // controls the rect's y coordinte
+  rect.w = surface->w; // controls the width of the rect
+  rect.h = surface->h; // controls the height of the rect
+
+  SDL_FreeSurface(surface);
+
+  SDL_RenderCopy(renderer_, texture, nullptr, &rect);
+  SDL_DestroyTexture(texture);
+}
+
+void particle::Screen::print_help(const Uint8 fade) const
+{
+  const SDL_Color color = { fade, fade, fade, fade };
+  const auto font = TTF_OpenFont("impact.ttf", 24);
+
+  if (!font) return;
+
+  set_text("esc", color, font, 50, 50);
+  set_text("lbm", color, font, 50, 75);
+  set_text("rbm", color, font, 50, 100);
+  set_text("tab", color, font, 50, 125);
+
+  set_text("- reset", color, font, 100, 50);
+  set_text("- explode", color, font, 100, 75);
+  set_text("- start/end wall", color, font, 100, 100);
+  set_text("- show walls & help", color, font, 100, 125);
+
+  SDL_RenderPresent(renderer_);
+}
+
 void particle::Screen::set_background(const Uint32 color) const
 {
 	SDL_memset4(buffer_, color, screen_width*screen_height);
+}
+
+void particle::Screen::present() const
+{
+  SDL_RenderPresent(renderer_);
 }
 
 void particle::Screen::clear() const
@@ -42,9 +92,8 @@ void particle::Screen::clear() const
 void particle::Screen::update() const
 {
 	SDL_UpdateTexture(texture_, nullptr, buffer_, screen_width * sizeof(Uint32));
-	SDL_RenderClear(renderer_);
+  SDL_RenderClear(renderer_);
 	SDL_RenderCopy(renderer_, texture_, nullptr, nullptr);
-	SDL_RenderPresent(renderer_);
 }
 
 bool particle::Screen::init()
@@ -54,6 +103,11 @@ bool particle::Screen::init()
 	{
 		return false;
 	}
+
+  if (TTF_Init() < 0) {
+    
+    return false;
+  }
 
 	//create window
 	window_ = SDL_CreateWindow(

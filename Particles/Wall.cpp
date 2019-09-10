@@ -41,8 +41,7 @@ void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool
     fade_counter_ = 0xff;
   }
 
-  const auto color = generate_color<Uint8, Uint32>(
-    fade_counter_, fade_counter_, fade_counter_, fade_counter_);
+  const auto color = generate_color<Uint8, Uint32>(fade_counter_);
   auto x1 = Screen::to_abs(x1_, Screen::screen_width);
   auto y1 = Screen::to_abs(y1_, Screen::screen_height);
   auto x2 = Screen::to_abs(x2_, Screen::screen_width);

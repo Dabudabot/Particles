@@ -29,4 +29,10 @@ namespace particle
 
     return color;
   }
+
+  template<class T8, class T32>
+  T32 generate_color(T8 gray)
+  {
+    return generate_color<T8, T32>(gray, gray, gray, gray);
+  }
 }

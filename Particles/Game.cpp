@@ -2,11 +2,12 @@
 
 particle::Game::Game()
 {
+  restore_defaults();
   screen_ = std::make_shared<Screen>();
-  swarm_host_ = std::make_unique<SwarmHost>();
-  wall_host_ = std::make_shared<WallHost>();
   running_ = true;
   wall_building_ = false;
+  show_help_ = false;
+  help_fade_ = 0xff;
 }
 
 int particle::Game::run()
@@ -39,7 +40,7 @@ int particle::Game::run()
       );
     }
 
-    wall_host_->draw_walls(screen_, true);
+    wall_host_->draw_walls(screen_, !show_help_);
 
     // process clicks
     SDL_Event event;
@@ -50,6 +51,11 @@ int particle::Game::run()
 
     // update screen buffer
     screen_->update();
+
+    // draw overlay
+    draw_help();
+
+    screen_->present();
   }
 
   return 0;
@@ -60,6 +66,31 @@ bool particle::Game::process_event(SDL_Event& event)
   if (SDL_QUIT == event.type)
   {
     return false;
+  }
+
+  switch(event.type)
+  {
+  case SDL_KEYDOWN:
+    switch (event.key.keysym.sym)
+    {
+    case SDLK_ESCAPE:
+      restore_defaults();
+      break;
+    case SDLK_TAB:
+      show_help_ = true;
+      break;
+    default:
+      break;
+    }
+    break;
+  case SDL_KEYUP:
+    if (event.key.keysym.sym == SDLK_TAB)
+    {
+      show_help_ = false;
+    }
+    break;
+  default:
+    break;
   }
 
   if (wall_building_)
@@ -112,10 +143,31 @@ bool particle::Game::process_event(SDL_Event& event)
 
 void particle::Game::draw_help()
 {
-  // tab - show walls & help
-  // esc - reset
-  // lbm - explode
-  // rbm - start/end wall
+  if (help_fade_ == 0 && !show_help_)
+  {
+    return;
+  }
+
+  if (show_help_)
+  {
+    help_fade_ = 0xff;
+  }
+  else
+  {
+    help_fade_ -= 0x3;
+  }
+
+  screen_->print_help(help_fade_);
+}
+
+void particle::Game::restore_defaults()
+{
+  
+  swarm_host_ = std::make_unique<SwarmHost>();
+  wall_host_ = std::make_shared<WallHost>();
+  wall_building_ = false;
+  show_help_ = false;
+  help_fade_ = 0x0;
 }
 
 

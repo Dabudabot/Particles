@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 namespace particle
 {
@@ -30,7 +31,10 @@ namespace particle
 
     bool init();
     void set_pixel(int x, int y, Uint32 color) const;
+    void set_text(const char* text, SDL_Color color, TTF_Font* font, int x, int y) const;
+    void print_help(Uint8 fade) const;
     void set_background(Uint32 color) const;
+    void present() const;
     void update() const;
     void clear() const;
 
