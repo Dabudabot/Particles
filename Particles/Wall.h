@@ -24,9 +24,9 @@ namespace particle
 
   public:
 
-    Wall(double x, double y);
+    Wall(int x, int y);
 
-    void move_end(double x, double y);
+    void move_end(int x, int y);
     void draw_wall(const std::shared_ptr<Screen>& screen, bool fade);
     bool is_sign(double x, double y) const;
     bool is_collide(double old_x, double old_y, double new_x, double new_y) const;
@@ -39,13 +39,14 @@ namespace particle
 
   public:
 
-    WallHost() = default;
+    WallHost() : active_wall_(nullptr) {}
 
-    void start_wall(double x, double y);
-    void move_wall(const std::shared_ptr<Screen>& screen, double x, double y) const;
-    void end_wall(double x, double y);
+    void start_wall(int x, int y);
+    void move_wall(const std::shared_ptr<Screen>& screen, int x, int y) const;
+    void end_wall(int x, int y);
     bool is_collide(double old_x, double old_y, double new_x, double new_y);
     void draw_walls(const std::shared_ptr<Screen>& screen, bool fade);
+    bool is_overflow() const;
   };
 }
 

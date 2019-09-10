@@ -20,14 +20,6 @@ particle::Screen::~Screen()
 	SDL_Quit();
 }
 
-void particle::Screen::set_pixel(const double x, const double y, const Uint32 color) const 
-{
-  const auto fix_x = static_cast<int>(x) * screen_width / 2;
-  const auto fix_y = static_cast<int>(y) * screen_height / 2;
-
-  set_pixel(fix_x, fix_y, color);
-}
-
 void particle::Screen::set_pixel(const int x, const int y, const Uint32 color) const
 {
   if (x < 0 || x >= screen_width || y < 0 || y >= screen_height)
@@ -112,4 +104,14 @@ bool particle::Screen::init()
 	clear();
 
 	return true;
+}
+
+double particle::Screen::to_relative(const int abs_coord, const int max)
+{
+  return static_cast<double>((2.0 * abs_coord) / max);
+}
+
+int particle::Screen::to_abs(const double rel_coord, const int max)
+{
+  return static_cast<int>(rel_coord * max / 2.0);
 }

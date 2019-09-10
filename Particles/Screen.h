@@ -29,11 +29,13 @@ namespace particle
     ~Screen();
 
     bool init();
-    void set_pixel(double x, double y, Uint32 color) const;
     void set_pixel(int x, int y, Uint32 color) const;
     void set_background(Uint32 color) const;
     void update() const;
     void clear() const;
+
+    static double to_relative(int abs_coord, int max);
+    static int to_abs(double rel_coord, int max);
   };
 }
 

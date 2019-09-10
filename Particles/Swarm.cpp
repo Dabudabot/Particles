@@ -1,31 +1,56 @@
 #include "Swarm.h"
 #include "Utils.h"
+#include "Screen.h"
 
-particle::Particle::Particle(const double x, const double y)
-: x_(x), y_(y), color_(0xffffffff)
+particle::Particle::Particle(const int x, const int y)
+: color_(0xffffffff)
 {
-  acceleration_ = 0.001;
+  x_ = Screen::to_relative(x, Screen::screen_width);
+  y_ = Screen::to_relative(y, Screen::screen_height);
+
+  acceleration_ = 0.0001;
   speed_ = acceleration_ * (((1.0 * rand()) / RAND_MAX) + 0.1);
   dir_ = (2 * M_PI * rand()) / RAND_MAX;
 }
 
+int particle::Particle::get_x() const
+{
+  return Screen::to_abs(x_, Screen::screen_width);
+}
+
+int particle::Particle::get_y() const
+{
+  return Screen::to_abs(y_, Screen::screen_height);
+}
+
 void particle::Particle::update(
   const int interval, 
-  Uint32& color
+  Uint32& color,
+  const std::shared_ptr<WallHost>& wall_host
 )
 {
-  auto fixed_speed = speed_ * interval;
+  const auto rel_x = x_;
+  const auto rel_y = y_;
 
-  auto x_result = x_ + fixed_speed * cos(dir_);
-  auto y_result = y_ + fixed_speed * sin(dir_);
+  auto fixed_speed = speed_ * static_cast<double>(interval);
 
-  while (x_result < 0 || x_result > 2 || y_result < 0 || y_result > 2)
+  if (fixed_speed > 0.1) {
+    fixed_speed = 0.1;
+  }
+  auto x_result = rel_x + fixed_speed * cos(dir_);
+  auto y_result = rel_y + fixed_speed * sin(dir_);
+
+  while (x_result < 0 ||
+    x_result > 2 ||
+    y_result < 0 ||
+    y_result > 2 ||
+    wall_host->is_collide(rel_x, rel_y, x_result, y_result))
   {
     speed_ = acceleration_ * (((1.0 * rand()) / RAND_MAX) + 0.2);
     fixed_speed = speed_ * interval;
     dir_ = (2 * M_PI * rand()) / RAND_MAX;
-    x_result = x_ + fixed_speed * cos(dir_);
-    y_result = y_ + fixed_speed * sin(dir_);
+    x_result = rel_x + fixed_speed * cos(dir_);
+    y_result = rel_y + fixed_speed * sin(dir_);
   }
 
   x_ = x_result;
@@ -33,17 +58,30 @@ void particle::Particle::update(
   color_ = color;
 }
 
-particle::Swarm::Swarm(const double origin_x, const double origin_y)
+particle::Swarm::Swarm(const int origin_x, const int origin_y)
 : last_time_(0)
 {
-  swarm_size_ = rand() % 100 + 500;
-  particles_ = Particles(swarm_size_, 
-    std::make_shared<Particle>(origin_x, origin_y));
+  swarm_size_ = rand() % 300 + 300;
+  particles_ = Particles(swarm_size_);
+
+  for (auto& particle : particles_)
+  {
+    particle = std::make_shared<Particle>(origin_x, origin_y);
+  }
 }
 
-void particle::Swarm::update(const int elapsed)
+void particle::Swarm::delete_particles(const unsigned int percent)
 {
-  const auto interval = elapsed - last_time_;
+  const auto amount = static_cast<unsigned int>(particles_.size()) * percent / 100;
+  if (amount == 0) return;
+  particles_.resize(particles_.size() - amount);
+}
+
+void particle::Swarm::update(const int elapsed, const std::shared_ptr<WallHost>& wall_host)
+{
+  auto interval = elapsed - last_time_;
+
+  if (last_time_ == 0) interval = 1;
 
   const auto red = static_cast<unsigned char>(
     (1 + sin(elapsed * 0.0001)) * 128);
@@ -56,22 +94,36 @@ void particle::Swarm::update(const int elapsed)
 
   for (const auto& particle : particles_)
   {
-    particle->update(interval, color);
+    particle->update(interval, color, wall_host);
   }
 
   last_time_ = elapsed;
 }
 
-void particle::SwarmHost::generate_swarm(double x, double y)
+void particle::SwarmHost::generate_swarm(int x, int y)
 {
   swarms_.push_back(std::make_shared<Swarm>(x, y));
+
+  for (unsigned int i = static_cast<int>(swarms_.size()) - 1; i > 0; i--)
+  {
+    auto percent = (static_cast<int>(swarms_.size()) - i) * 2;
+
+    if (percent >= 100) percent = 100;
+
+    swarms_[i]->delete_particles(percent);
+  }
+
+  if (swarms_.size() >= 50 )
+  {
+    swarms_.erase(swarms_.begin(), swarms_.begin() + 1);
+  }
 }
 
-void particle::SwarmHost::update(const int elapsed)
+void particle::SwarmHost::update(const int elapsed, const std::shared_ptr<WallHost>& wall_host)
 {
   for (const auto& swarm : swarms_)
   {
-    swarm->update(elapsed);
+    swarm->update(elapsed, wall_host);
   }
 }
 

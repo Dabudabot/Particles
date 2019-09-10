@@ -10,12 +10,13 @@ namespace particle {
   {
     std::shared_ptr<Screen> screen_;
     std::unique_ptr<SwarmHost> swarm_host_;
-    std::unique_ptr<WallHost> wall_host_;
+    std::shared_ptr<WallHost> wall_host_;
     bool running_;
 
     bool wall_building_;
 
     bool process_event(SDL_Event& event);
+    void draw_help();
 
   public:
 
@@ -30,6 +31,5 @@ namespace particle {
 
     // start the game
     int run();
-
   };
 }

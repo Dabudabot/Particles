@@ -4,7 +4,7 @@ particle::Game::Game()
 {
   screen_ = std::make_shared<Screen>();
   swarm_host_ = std::make_unique<SwarmHost>();
-  wall_host_ = std::make_unique<WallHost>();
+  wall_host_ = std::make_shared<WallHost>();
   running_ = true;
   wall_building_ = false;
 }
@@ -24,7 +24,7 @@ int particle::Game::run()
     const auto elapsed = SDL_GetTicks();
 
     // update all available swarms
-    swarm_host_->update(elapsed);
+    swarm_host_->update(elapsed, wall_host_);
 
     // all particles on the screen
     auto particles = swarm_host_->get_particles();
@@ -73,12 +73,14 @@ bool particle::Game::process_event(SDL_Event& event)
         wall_building_ = false;
         break;
       case SDL_BUTTON_RIGHT:
+        //wall_host_->move_wall(screen_, event.button.x, event.button.y);
         wall_building_ = false;
         break;
       default:
         break;
       }
-    } else if(SDL_MOUSEMOTION == event.type)
+    }
+    else if(SDL_MOUSEMOTION == event.type)
     {
       wall_host_->move_wall(screen_, event.button.x, event.button.y);
     }
@@ -90,8 +92,11 @@ bool particle::Game::process_event(SDL_Event& event)
       switch (event.button.button)
       {
       case SDL_BUTTON_LEFT:
-        wall_host_->start_wall(event.button.x, event.button.y);
-        wall_building_ = true;
+        if (!wall_host_->is_overflow())
+        {
+          wall_host_->start_wall(event.button.x, event.button.y);
+          wall_building_ = true;
+        }
         break;
       case SDL_BUTTON_RIGHT:
         swarm_host_->generate_swarm(event.button.x, event.button.y);
@@ -103,6 +108,14 @@ bool particle::Game::process_event(SDL_Event& event)
   }
 
   return true;
+}
+
+void particle::Game::draw_help()
+{
+  // tab - show walls & help
+  // esc - reset
+  // lbm - explode
+  // rbm - start/end wall
 }
 
 
