@@ -10,8 +10,9 @@ namespace particle
   class Particle
   {
     Uint32 color_;
-    double x_;
-    double y_;
+    D_Point point_{};
+
+    I_Point o_point_{};
 
     double acceleration_;
     double speed_;

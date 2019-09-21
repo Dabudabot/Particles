@@ -1,26 +1,40 @@
 #include "Wall.h"
 #include "Utils.h"
+#include <algorithm>
 
 particle::Wall::Wall(const int x, const int y)
   : a_(0), b_(0), c_(0), fade_counter_(0)
 {
-  x1_ = Screen::to_relative(x, Screen::screen_width);
-  y1_ = Screen::to_relative(y, Screen::screen_height);
-  x2_ = x1_;
-  y2_ = y1_;
+  coordinates_.start.x = Screen::to_relative(x, Screen::screen_width);
+  coordinates_.start.y = Screen::to_relative(y, Screen::screen_height);
+  coordinates_.end.x = coordinates_.start.x;
+  coordinates_.end.y = coordinates_.start.y;
+}
+
+particle::Wall::Wall(const Coordinates<double> coordinates)
+{
+  coordinates_.start.x = coordinates.start.x;
+  coordinates_.start.y = coordinates.start.y;
+  coordinates_.end.x = coordinates.end.x;
+  coordinates_.end.y = coordinates.end.y;
+  fade_counter_ = 0;
+  a_ = 0;
+  b_ = 0;
+  c_ = 0;
+  calc_abc();
 }
 
 void particle::Wall::calc_abc()
 {
-  a_ = y1_ - y2_;
-  b_ = x2_ - x1_;
-  c_ = x1_ * y2_ - x2_ * y1_;
+  a_ = coordinates_.start.y - coordinates_.end.y;
+  b_ = coordinates_.end.x - coordinates_.start.x;
+  c_ = coordinates_.start.x * coordinates_.end.y - coordinates_.end.x * coordinates_.start.y;
 }
 
 void particle::Wall::move_end(const int x, const int y)
 {
-  x2_ = Screen::to_relative(x, Screen::screen_width);
-  y2_ = Screen::to_relative(y, Screen::screen_height);
+  coordinates_.end.x = Screen::to_relative(x, Screen::screen_width);
+  coordinates_.end.y = Screen::to_relative(y, Screen::screen_height);
 
   calc_abc();
 }
@@ -42,10 +56,10 @@ void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool
   }
 
   const auto color = generate_color<Uint8, Uint32>(fade_counter_);
-  auto x1 = Screen::to_abs(x1_, Screen::screen_width);
-  auto y1 = Screen::to_abs(y1_, Screen::screen_height);
-  auto x2 = Screen::to_abs(x2_, Screen::screen_width);
-  auto y2 = Screen::to_abs(y2_, Screen::screen_height);
+  auto x1 = Screen::to_abs(coordinates_.start.x, Screen::screen_width);
+  auto y1 = Screen::to_abs(coordinates_.start.y, Screen::screen_height);
+  auto x2 = Screen::to_abs(coordinates_.end.x, Screen::screen_width);
+  auto y2 = Screen::to_abs(coordinates_.end.y, Screen::screen_height);
 
   // Bresenham's line algorithm
   const auto steep = (std::abs(y2 - y1) > std::abs(x2 - x1));
@@ -90,33 +104,60 @@ void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool
   }
 }
 
-bool particle::Wall::is_sign(const double x, const double y) const
+// Given three colinear points p, q, r, the function checks if
+// point q lies on line segment 'pr' 
+bool particle::Wall::on_segment(const D_Point p, const D_Point q, const D_Point r) const
 {
-  const auto z = a_ * x + b_ * y + c_;
-  return z > 0;
+  return q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) &&
+    q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y);
 }
 
-bool particle::Wall::is_collide(
-  const double old_x,
-  const double old_y,
-  const double new_x,
-  const double new_y) const
+// To find orientation of ordered triplet (p, q, r). 
+// The function returns following values 
+// 0 --> p, q and r are colinear 
+// 1 --> Clockwise 
+// 2 --> Counterclockwise 
+int particle::Wall::orientation(const D_Point p, const D_Point q, const D_Point r)
 {
-  const auto old_sign = is_sign(old_x, old_y);
-  const auto new_sign = is_sign(new_x, new_y);
+  // See https://www.geeksforgeeks.org/orientation-3-ordered-points/ 
+  // for details of below formula. 
+  const auto val = (q.y - p.y) * (r.x - q.x) -
+    (q.x - p.x) * (r.y - q.y);
 
-  if (new_sign == old_sign) return false;
+  if (val == 0) return 0;  // colinear 
 
-  auto min_x = x1_;
-  auto max_x = x2_;
-  auto min_y = y1_;
-  auto max_y = y2_;
+  return (val > 0) ? 1 : 2; // clock or counter clock wise 
+}
 
-  if (max_x < min_x) std::swap(min_x, max_x);
-  if (max_y < min_y) std::swap(min_y, max_y);
+// The main function that returns true if line segment 'p1q1' 
+// and 'p2q2' intersect. 
+bool particle::Wall::is_collide(D_Point p1, D_Point q1, D_Point p2, D_Point q2) const
+{
+  // Find the four orientations needed for general and 
+  // special cases 
+  const auto o1 = orientation(p1, q1, p2);
+  const auto o2 = orientation(p1, q1, q2);
+  const auto o3 = orientation(p2, q2, p1);
+  const auto o4 = orientation(p2, q2, q1);
 
-  return (new_x >= min_x && new_x <= max_x &&
-    new_y >= min_y && new_y <= max_y);
+  // General case 
+  if (o1 != o2 && o3 != o4)
+    return true;
+
+  // Special Cases 
+  // p1, q1 and p2 are colinear and p2 lies on segment p1q1 
+  if (o1 == 0 && on_segment(p1, p2, q1)) return true;
+
+  // p1, q1 and q2 are colinear and q2 lies on segment p1q1 
+  if (o2 == 0 && on_segment(p1, q2, q1)) return true;
+
+  // p2, q2 and p1 are colinear and p1 lies on segment p2q2 
+  if (o3 == 0 && on_segment(p2, p1, q2)) return true;
+
+  // p2, q2 and q1 are colinear and q1 lies on segment p2q2 
+  if (o4 == 0 && on_segment(p2, q1, q2)) return true;
+
+  return false; // Doesn't fall in any of the above cases 
 }
 
 void particle::WallHost::start_wall(const int x, const int y)
@@ -145,7 +186,12 @@ bool particle::WallHost::is_collide(
 {
   for (auto& wall : walls_)
   {
-    if (wall->is_collide(old_x, old_y, new_x, new_y))
+    if (wall->is_collide(
+      D_Point(old_x, old_y), 
+      D_Point(new_x, new_y), 
+      wall->get_coordinates()->start, 
+      wall->get_coordinates()->end
+    ))
     {
       return true;
     }
@@ -169,5 +215,26 @@ void particle::WallHost::draw_walls(const std::shared_ptr<Screen>& screen, const
 
 bool particle::WallHost::is_overflow() const
 {
-  return walls_.size() > 50;
+  return walls_.size() > 70;
+}
+
+void particle::WallHost::serialize_walls(std::ostream& file)
+{
+  for (const auto& wall : walls_)
+  {
+    file.write(
+      reinterpret_cast<char*>(wall->get_coordinates()), 
+      sizeof(D_Coordinates)
+    );
+  }
+}
+
+void particle::WallHost::deserialize_walls(std::istream& file)
+{
+  while (!file.eof())
+  {
+    D_Coordinates coordinates{};
+    file.read(reinterpret_cast<char*>(&coordinates), sizeof(D_Coordinates));
+    walls_.push_back(std::make_shared<Wall>(coordinates));
+  }
 }

@@ -18,9 +18,14 @@ namespace particle {
 
     Uint8 help_fade_;
 
+    const char* filename_ = "save.dat";
+
     bool process_event(SDL_Event& event);
     void draw_help();
     void restore_defaults();
+
+    void save(const char* filename) const;
+    void load(const char* filename);
 
   public:
 

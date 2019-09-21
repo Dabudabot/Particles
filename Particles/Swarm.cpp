@@ -5,8 +5,10 @@
 particle::Particle::Particle(const int x, const int y)
 : color_(0xffffffff)
 {
-  x_ = Screen::to_relative(x, Screen::screen_width);
-  y_ = Screen::to_relative(y, Screen::screen_height);
+  point_.x = Screen::to_relative(x, Screen::screen_width);
+  point_.y = Screen::to_relative(y, Screen::screen_height);
+  o_point_.x = x;
+  o_point_.y = y;
 
   acceleration_ = 0.0001;
   speed_ = acceleration_ * (((1.0 * rand()) / RAND_MAX) + 0.1);
@@ -15,12 +17,12 @@ particle::Particle::Particle(const int x, const int y)
 
 int particle::Particle::get_x() const
 {
-  return Screen::to_abs(x_, Screen::screen_width);
+  return Screen::to_abs(point_.x, Screen::screen_width);
 }
 
 int particle::Particle::get_y() const
 {
-  return Screen::to_abs(y_, Screen::screen_height);
+  return Screen::to_abs(point_.y, Screen::screen_height);
 }
 
 void particle::Particle::update(
@@ -29,15 +31,16 @@ void particle::Particle::update(
   const std::shared_ptr<WallHost>& wall_host
 )
 {
-  const auto rel_x = x_;
-  const auto rel_y = y_;
+  const auto rel_x = point_.x;
+  const auto rel_y = point_.y;
 
+  const auto x_fix = 0.6;
   auto fixed_speed = speed_ * static_cast<double>(interval);
 
   if (fixed_speed > 0.1) {
     fixed_speed = 0.1;
   }
-  auto x_result = rel_x + fixed_speed * cos(dir_);
+  auto x_result = rel_x + fixed_speed * x_fix * cos(dir_);
   auto y_result = rel_y + fixed_speed * sin(dir_);
 
   while (x_result < 0 ||
@@ -49,12 +52,12 @@ void particle::Particle::update(
     speed_ = acceleration_ * (((1.0 * rand()) / RAND_MAX) + 0.2);
     fixed_speed = speed_ * interval;
     dir_ = (2 * M_PI * rand()) / RAND_MAX;
-    x_result = rel_x + fixed_speed * cos(dir_);
+    x_result = rel_x + fixed_speed * x_fix * cos(dir_);
     y_result = rel_y + fixed_speed * sin(dir_);
   }
 
-  x_ = x_result;
-  y_ = y_result;
+  point_.x = x_result;
+  point_.y = y_result;
   color_ = color;
 }
 
@@ -84,11 +87,11 @@ void particle::Swarm::update(const int elapsed, const std::shared_ptr<WallHost>&
   if (last_time_ == 0) interval = 1;
 
   const auto red = static_cast<unsigned char>(
-    (1 + sin(elapsed * 0.0001)) * 128);
+    (1 + sin((elapsed - 0x4000) * 0.0001)) * 128);
   const auto green = static_cast<unsigned char>(
-    (1 + sin(elapsed * 0.0003)) * 128);
+    (1 + sin(elapsed * 0.0001)) * 128);
   const auto blue = static_cast<unsigned char>(
-    (1 + sin(elapsed * 0.0005)) * 128);
+    (1 + sin((elapsed + 0x4000) * 0.0001)) * 128);
   auto color = generate_color<Uint8, Uint32>(
     red, green, blue, 0xFF);
 

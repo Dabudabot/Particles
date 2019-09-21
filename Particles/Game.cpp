@@ -1,4 +1,6 @@
 #include "Game.h"
+#include <fstream>
+#include <iostream>
 
 particle::Game::Game()
 {
@@ -40,6 +42,8 @@ int particle::Game::run()
       );
     }
 
+    screen_->motion_blur();
+
     wall_host_->draw_walls(screen_, !show_help_);
 
     // process clicks
@@ -79,6 +83,14 @@ bool particle::Game::process_event(SDL_Event& event)
     case SDLK_TAB:
       show_help_ = true;
       break;
+    case SDLK_F9:
+      // quick save
+      save(filename_);
+      break;
+    case SDLK_F10:
+      // quick load
+      load(filename_);
+      break;
     default:
       break;
     }
@@ -104,7 +116,6 @@ bool particle::Game::process_event(SDL_Event& event)
         wall_building_ = false;
         break;
       case SDL_BUTTON_RIGHT:
-        //wall_host_->move_wall(screen_, event.button.x, event.button.y);
         wall_building_ = false;
         break;
       default:
@@ -162,7 +173,6 @@ void particle::Game::draw_help()
 
 void particle::Game::restore_defaults()
 {
-  
   swarm_host_ = std::make_unique<SwarmHost>();
   wall_host_ = std::make_shared<WallHost>();
   wall_building_ = false;
@@ -170,4 +180,27 @@ void particle::Game::restore_defaults()
   help_fade_ = 0x0;
 }
 
+void particle::Game::save(const char* filename) const
+{
+  // open file, create if not exist
+  std::ofstream file("save.save", std::ios::out | std::ios::binary);
+  if (!file) {
+    return;
+  }
 
+  wall_host_->serialize_walls(file);
+  
+  file.close();
+}
+
+void particle::Game::load(const char* filename)
+{
+  restore_defaults();
+
+  // open file, create if not exist
+  std::ifstream file("save.save", std::ios::out | std::ios::binary);
+
+  wall_host_->deserialize_walls(file);
+  
+  file.close();
+}
