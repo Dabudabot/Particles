@@ -55,6 +55,26 @@ namespace particle {
      */
     const char* filename_ = "save.save";
 
+  public:
+
+    // delete unused ctors
+    Game(const Game&) = delete;
+    Game(Game&&) = delete;
+    Game& operator= (const Game&) = delete;
+    Game& operator= (Game&&) = delete;
+    
+    /**
+     * \brief default ctor to init pointers
+     */
+    Game();
+    ~Game() = default;
+
+    /**
+     * \brief start the game
+     * \return 0 in case of success or error code
+     */
+    int run();
+
     /**
      * \brief processing mouse and keyboard events
      * \param event event of the keyboard and mouse
@@ -81,25 +101,5 @@ namespace particle {
      * \param filename name of the file to read
      */
     void load(const char* filename);
-
-  public:
-
-    // delete unused ctors
-    Game(const Game&) = delete;
-    Game(Game&&) = delete;
-    Game& operator= (const Game&) = delete;
-    Game& operator= (Game&&) = delete;
-    
-    /**
-     * \brief default ctor to init pointers
-     */
-    Game();
-    ~Game() = default;
-
-    /**
-     * \brief start the game
-     * \return 0 in case of success or error code
-     */
-    int run();
   };
 }

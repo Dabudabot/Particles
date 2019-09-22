@@ -3,14 +3,14 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace ParticlesTest
+namespace utils_test
 {
-	TEST_CLASS(ParticlesTest)
-	{
-	public:
-		
-		TEST_METHOD(TestMethod1)
-		{
-		}
-	};
+  TEST_CLASS(UtilsTest)
+  {
+  public:
+
+    TEST_METHOD(test_ctor)
+    {
+    }
+  };
 }
