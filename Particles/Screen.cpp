@@ -1,3 +1,7 @@
+/**
+ * \author Dabudabot
+ */
+
 #include "Screen.h"
 #include <ctime>
 #include <cstdlib>
@@ -112,21 +116,26 @@ void particle::Screen::motion_blur() const
 
       const Uint8 k = 0xf;
 
+      // get pixel from blur buffer
       extract_color<Uint8, Uint32>(blur_buffer_[(y * screen_width) + x], &red, &green, &blue);
 
+      // fade it
       red < k ? red = 0 : red -= k;
       green < k ? green = 0 : green -= k;
       blue  < k ? blue = 0 : blue -= k;
 
+      // get pixel from current buffer
       extract_color<Uint8, Uint32>(buffer_[(y * screen_width) + x], &red2, &green2, &blue2);
 
+      // set color
       if (red2 == 0 && green2 == 0 && blue2 == 0 && !(red == 0 && green == 0 && blue == 0))
       {
         buffer_[(y * screen_width) + x] = generate_color<Uint8, Uint32>(red, green, blue);
       }
     }
   }
-  
+
+  // copy to blur buffer
   SDL_memcpy4(blur_buffer_, buffer_, screen_width * screen_height);
 }
 

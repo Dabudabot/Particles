@@ -1,3 +1,8 @@
+/**
+ * \author Dabudabot
+ * \brief
+ */
+
 #include "Wall.h"
 #include "Utils.h"
 #include <algorithm>
@@ -104,19 +109,12 @@ void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool
   }
 }
 
-// Given three colinear points p, q, r, the function checks if
-// point q lies on line segment 'pr' 
 bool particle::Wall::on_segment(const D_Point p, const D_Point q, const D_Point r) const
 {
   return q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) &&
     q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y);
 }
 
-// To find orientation of ordered triplet (p, q, r). 
-// The function returns following values 
-// 0 --> p, q and r are colinear 
-// 1 --> Clockwise 
-// 2 --> Counterclockwise 
 int particle::Wall::orientation(const D_Point p, const D_Point q, const D_Point r)
 {
   // See https://www.geeksforgeeks.org/orientation-3-ordered-points/ 

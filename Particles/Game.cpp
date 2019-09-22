@@ -1,3 +1,7 @@
+/**
+ * \author Dabudabot
+ */
+
 #include "Game.h"
 #include <fstream>
 #include <iostream>
@@ -14,13 +18,16 @@ particle::Game::Game()
 
 int particle::Game::run()
 {
+  // if failed to init exit with error
   if (!screen_->init())
   {
     return 1;
   }
 
+  // until game run do loop
   while (running_)
   {
+    // clean screen
     screen_->clear();
 
     // get time from the beginning
@@ -42,8 +49,10 @@ int particle::Game::run()
       );
     }
 
+    // blur particles
     screen_->motion_blur();
 
+    // draw walls if required
     wall_host_->draw_walls(screen_, !show_help_);
 
     // process clicks
@@ -59,6 +68,7 @@ int particle::Game::run()
     // draw overlay
     draw_help();
 
+    // show updated texture
     screen_->present();
   }
 
@@ -67,6 +77,7 @@ int particle::Game::run()
 
 bool particle::Game::process_event(SDL_Event& event)
 {
+  // end work
   if (SDL_QUIT == event.type)
   {
     return false;
@@ -78,9 +89,11 @@ bool particle::Game::process_event(SDL_Event& event)
     switch (event.key.keysym.sym)
     {
     case SDLK_ESCAPE:
+      // esc resets the game
       restore_defaults();
       break;
     case SDLK_TAB:
+      // tab shows the game
       show_help_ = true;
       break;
     case SDLK_F9:
@@ -96,6 +109,7 @@ bool particle::Game::process_event(SDL_Event& event)
     }
     break;
   case SDL_KEYUP:
+    // stop showing help
     if (event.key.keysym.sym == SDLK_TAB)
     {
       show_help_ = false;
@@ -105,6 +119,7 @@ bool particle::Game::process_event(SDL_Event& event)
     break;
   }
 
+  // after left click we are in wall building mode
   if (wall_building_)
   {
     if (SDL_MOUSEBUTTONDOWN == event.type)
@@ -183,7 +198,7 @@ void particle::Game::restore_defaults()
 void particle::Game::save(const char* filename) const
 {
   // open file, create if not exist
-  std::ofstream file("save.save", std::ios::out | std::ios::binary);
+  std::ofstream file(filename, std::ios::out | std::ios::binary);
   if (!file) {
     return;
   }
@@ -198,7 +213,7 @@ void particle::Game::load(const char* filename)
   restore_defaults();
 
   // open file, create if not exist
-  std::ifstream file("save.save", std::ios::out | std::ios::binary);
+  std::ifstream file(filename, std::ios::out | std::ios::binary);
 
   wall_host_->deserialize_walls(file);
   

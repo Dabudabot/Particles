@@ -1,3 +1,8 @@
+/**
+ * \author Dabudabot
+ * \brief
+ */
+
 #include "Swarm.h"
 #include "Utils.h"
 #include "Screen.h"
@@ -34,6 +39,7 @@ void particle::Particle::update(
   const auto rel_x = point_.x;
   const auto rel_y = point_.y;
 
+  // calc speed according to system performance
   const auto x_fix = 0.6;
   auto fixed_speed = speed_ * static_cast<double>(interval);
 
@@ -43,6 +49,7 @@ void particle::Particle::update(
   auto x_result = rel_x + fixed_speed * x_fix * cos(dir_);
   auto y_result = rel_y + fixed_speed * sin(dir_);
 
+  // if collision, recalculate direction randomly
   while (x_result < 0 ||
     x_result > 2 ||
     y_result < 0 ||
