@@ -55,6 +55,12 @@ namespace particle {
      */
     const char* filename_ = "save.save";
 
+    
+    /**
+     * \brief add help elements to the screen
+     */
+    void draw_help();
+
   public:
 
     // delete unused ctors
@@ -82,14 +88,9 @@ namespace particle {
      */
     bool process_event(SDL_Event& event);
     /**
-     * \brief add help elements to the screen
-     */
-    void draw_help();
-    /**
      * \brief jump to initial state
      */
     void restore_defaults();
-
     /**
      * \brief open file for write and save walls position
      * \param filename name of the save file

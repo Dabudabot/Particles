@@ -99,6 +99,8 @@ namespace particle
      */
     int fade_counter_;
 
+  public:
+
     /**
      * \brief calculate a, b and c by coordinates
      */
@@ -106,7 +108,7 @@ namespace particle
     /**
      * \brief Given three colinear points p, q, r,
      *        the function checks if point q lies
-     *        on line segment 'pr' 
+     *        on line segment 'pr'
      * \param p point
      * \param q point
      * \param r point
@@ -120,11 +122,9 @@ namespace particle
      * \param r point
      * \return  0 --> p, q and r are colinear
      *          1 --> Clockwise
-     *          2 --> Counterclockwise 
+     *          2 --> Counterclockwise
      */
     static int orientation(D_Point p, D_Point q, D_Point r);
-
-  public:
 
     /**
      * \brief ctor to start wall

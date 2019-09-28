@@ -64,7 +64,7 @@ void particle::Screen::set_text(
 void particle::Screen::print_help(const Uint8 fade) const
 {
   const SDL_Color color = { fade, fade, fade, fade };
-  const auto font = TTF_OpenFont("impact.ttf", 24);
+  const auto font = TTF_OpenFont(R"(C:\Windows\Fonts\impact.ttf)", 24);
 
   if (!font) return;
 
