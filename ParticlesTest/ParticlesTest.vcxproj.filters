@@ -21,6 +21,18 @@
     <ClInclude Include="Mocks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScreenTest.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="SourceTest.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="SwarmTest.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
+    <ClInclude Include="WallTest.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

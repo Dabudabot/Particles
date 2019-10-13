@@ -42,6 +42,10 @@
   <ItemGroup>
     <ClInclude Include="Common.h" />
     <ClInclude Include="Mocks.h" />
+    <ClInclude Include="ScreenTest.h" />
+    <ClInclude Include="SourceTest.h" />
+    <ClInclude Include="SwarmTest.h" />
+    <ClInclude Include="WallTest.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

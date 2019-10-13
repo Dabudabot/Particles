@@ -10,6 +10,7 @@
 class ScreenMock : public particle::Screen
 {
 public:
+  MOCK_METHOD(bool, init, (), (override));
   MOCK_CONST_METHOD5(set_text, void(const char* text, SDL_Color color, TTF_Font* font, int x, int y));
   MOCK_CONST_METHOD1(print_help, void(Uint8 fade));
   MOCK_CONST_METHOD0(present, void());
@@ -78,4 +79,6 @@ public:
   void game_draw_help() { Game::draw_help(); }
   bool game_process_event(SDL_Event& event) { return Game::process_event(event); }
   void game_restore_defaults() { Game::restore_defaults(); }
+  void game_save(const char* filename) { Game::save(filename); }
+  void game_load(const char* filename) { Game::load(filename); }
 };

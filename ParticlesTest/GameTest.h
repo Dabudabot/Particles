@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "Mocks.h"
+#include <stdio.h>
 
 class GameTest : public ::testing::Test
 {
@@ -211,7 +212,7 @@ TEST_F(GameTest, ProcessEventStartWallNoOverflow)
   event_->button.x = 42;
   event_->button.y = 43;
 
-  EXPECT_CALL(*wall_host_, is_overflow()).WillOnce(::testing::Return(false));;
+  EXPECT_CALL(*wall_host_, is_overflow()).WillOnce(::testing::Return(false));
   EXPECT_CALL(*wall_host_, start_wall(42, 43));
   EXPECT_TRUE(game_->game_process_event(*event_));
 
@@ -284,6 +285,21 @@ TEST_F(GameTest, DrawHelpShowHelp)
   EXPECT_TRUE(game_->is_running());
 }
 
+TEST_F(GameTest, DrawHelpFadeHelp)
+{
+  const Uint8 res = 0xfc;
+
+  game_->set_help(false);
+
+  EXPECT_CALL(*screen_, print_help(res));
+
+  game_->game_draw_help();
+
+  ASSERT_EQ(game_->get_help_fade(), res);
+  EXPECT_FALSE(game_->is_help_shown());
+  EXPECT_TRUE(game_->is_running());
+}
+
 TEST_F(GameTest, RestoreDefaults)
 {
   Uint8 zero = 0x55;
@@ -299,4 +315,43 @@ TEST_F(GameTest, RestoreDefaults)
   EXPECT_FALSE(game_->is_help_shown());
   EXPECT_FALSE(game_->is_wall_building());
   EXPECT_TRUE(game_->is_running());
+}
+
+TEST_F(GameTest, Save)
+{
+  EXPECT_CALL(*wall_host_, serialize_walls);
+
+  game_->game_save("test_file.save");
+
+  ASSERT_FALSE(remove("test_file.save"));
+}
+
+TEST_F(GameTest, Load)
+{
+  std::ofstream file("test_file.save", std::ios::out | std::ios::binary);
+
+  auto magic = 42;
+
+  file.write(
+    reinterpret_cast<char*>(&magic),
+    sizeof(int)
+  );
+
+  file.close();
+
+  EXPECT_CALL(*game_, restore_defaults);
+  EXPECT_CALL(*wall_host_, deserialize_walls);
+
+  game_->game_load("test_file.save");
+
+  ASSERT_FALSE(remove("test_file.save"));
+}
+
+TEST_F(GameTest, RunFailInit)
+{
+  EXPECT_CALL(*screen_, init).WillOnce(::testing::Return(false));
+
+  const auto result = game_->game_run();
+
+  ASSERT_EQ(result, 1);
 }
