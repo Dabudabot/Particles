@@ -145,9 +145,6 @@
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="impact.ttf" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="libfreetype-6.dll" />
     <None Include="SDL2.dll" />
     <None Include="SDL2_ttf.dll" />

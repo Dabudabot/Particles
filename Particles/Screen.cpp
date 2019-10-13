@@ -161,7 +161,7 @@ bool particle::Screen::init()
 
 	//create window
 	window_ = SDL_CreateWindow(
-		"Your Particles",
+		"Particles",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		screen_width,

@@ -15,7 +15,7 @@ namespace particle
   /**
    * \brief class to draw elements on screen
    */
-  class Screen final
+  class Screen
   {
     /**
      * \brief windows of the game
@@ -68,7 +68,7 @@ namespace particle
      * \brief init SDL lib
      * \return true if init success, false otherwise
      */
-    bool init();
+    virtual bool init();
 
     /**
      * \brief set color pixel to the texture buffer
@@ -76,13 +76,13 @@ namespace particle
      * \param y height coordinate
      * \param color color of the pixel
      */
-    void set_pixel(int x, int y, Uint32 color) const;
+    virtual void set_pixel(int x, int y, Uint32 color) const;
 
     /**
      * \brief set all texture buffer to one color
      * \param color color of all pixels
      */
-    void set_background(Uint32 color) const;
+    virtual void set_background(Uint32 color) const;
 
     /**
      * \brief draw text over texture buffer
@@ -92,30 +92,30 @@ namespace particle
      * \param x width coordinate
      * \param y height coordinate
      */
-    void set_text(const char* text, SDL_Color color, TTF_Font* font, int x, int y) const;
+    virtual void set_text(const char* text, SDL_Color color, TTF_Font* font, int x, int y) const;
     /**
      * \brief print help message over the screen
      * \param fade count of fade to black
      */
-    void print_help(Uint8 fade) const;
+    virtual void print_help(Uint8 fade) const;
 
     /**
      * \brief show current texture
      */
-    void present() const;
+    virtual void present() const;
     /**
      * \brief update pixels
      */
-    void update() const;
+    virtual void update() const;
     /**
      * \brief remove all pixels
      */
-    void clear() const;
+    virtual void clear() const;
 
     /**
      * \brief motion blur of texture buffer
      */
-    void motion_blur() const;
+    virtual void motion_blur() const;
 
     /**
      * \brief cast absolute coordinate to relative

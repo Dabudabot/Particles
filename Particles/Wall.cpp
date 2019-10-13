@@ -129,7 +129,7 @@ int particle::Wall::orientation(const D_Point p, const D_Point q, const D_Point 
 
 // The main function that returns true if line segment 'p1q1' 
 // and 'p2q2' intersect. 
-bool particle::Wall::is_collide(D_Point p1, D_Point q1, D_Point p2, D_Point q2) const
+bool particle::Wall::is_collide(const D_Point p1, const D_Point q1, const D_Point p2, const D_Point q2) const
 {
   // Find the four orientations needed for general and 
   // special cases 
@@ -180,9 +180,9 @@ bool particle::WallHost::is_collide(
   const double old_x,
   const double old_y,
   const double new_x,
-  const double new_y)
+  const double new_y) const
 {
-  for (auto& wall : walls_)
+  for (const auto& wall : walls_)
   {
     if (wall->is_collide(
       D_Point(old_x, old_y), 

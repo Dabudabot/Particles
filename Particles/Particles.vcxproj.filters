@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="dlls">
+    <Filter Include="Dlls">
       <UniqueIdentifier>{8690fba0-fbe3-4fe5-bbd6-d9def8bb933e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -52,22 +52,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="impact.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="libfreetype-6.dll">
-      <Filter>dlls</Filter>
+      <Filter>Dlls</Filter>
     </None>
     <None Include="SDL2.dll">
-      <Filter>dlls</Filter>
+      <Filter>Dlls</Filter>
     </None>
     <None Include="SDL2_ttf.dll">
-      <Filter>dlls</Filter>
+      <Filter>Dlls</Filter>
     </None>
     <None Include="zlib1.dll">
-      <Filter>dlls</Filter>
+      <Filter>Dlls</Filter>
     </None>
   </ItemGroup>
 </Project>

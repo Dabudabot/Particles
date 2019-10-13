@@ -4,12 +4,25 @@
 
 #include "Game.h"
 #include <fstream>
-#include <iostream>
 
 particle::Game::Game()
 {
-  restore_defaults();
+  Game::restore_defaults();
   screen_ = std::make_shared<Screen>();
+  running_ = true;
+  wall_building_ = false;
+  show_help_ = false;
+  help_fade_ = 0xff;
+}
+
+particle::Game::Game(
+  const std::shared_ptr<Screen>& screen,
+  const std::shared_ptr<SwarmHost>& swarm_host,
+  const std::shared_ptr<WallHost>& wall_host)
+{
+  screen_ = screen;
+  swarm_host_ = swarm_host;
+  wall_host_ = wall_host;
   running_ = true;
   wall_building_ = false;
   show_help_ = false;
@@ -90,7 +103,7 @@ bool particle::Game::process_event(SDL_Event& event)
     {
     case SDLK_ESCAPE:
       // esc resets the game
-      restore_defaults();
+      this->restore_defaults();
       break;
     case SDLK_TAB:
       // tab shows the game
@@ -149,6 +162,7 @@ bool particle::Game::process_event(SDL_Event& event)
       switch (event.button.button)
       {
       case SDL_BUTTON_LEFT:
+        
         if (!wall_host_->is_overflow())
         {
           wall_host_->start_wall(event.button.x, event.button.y);
@@ -188,7 +202,7 @@ void particle::Game::draw_help()
 
 void particle::Game::restore_defaults()
 {
-  swarm_host_ = std::make_unique<SwarmHost>();
+  swarm_host_ = std::make_shared<SwarmHost>();
   wall_host_ = std::make_shared<WallHost>();
   wall_building_ = false;
   show_help_ = false;

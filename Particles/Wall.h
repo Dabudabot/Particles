@@ -181,6 +181,10 @@ namespace particle
     std::shared_ptr<Wall> active_wall_;
 
   public:
+    std::vector<std::shared_ptr<Wall>> get_walls() const { return walls_; }
+    std::shared_ptr<Wall> get_active_wall() const { return active_wall_; }
+
+    virtual ~WallHost() = default;
 
     /**
      * \brief default ctor defining active wall with null
@@ -192,20 +196,20 @@ namespace particle
      * \param x absolute start width coordinate of the wall
      * \param y absolute start height coordinate of the wall
      */
-    void start_wall(int x, int y);
+    virtual void start_wall(int x, int y);
     /**
      * \brief moving end of active wall by coordinates
      * \param screen drawer of the wall
      * \param x absolute end width coordinate of the wall
      * \param y absolute end height coordinate of the wall
      */
-    void move_wall(const std::shared_ptr<Screen>& screen, int x, int y) const;
+    virtual void move_wall(const std::shared_ptr<Screen>& screen, int x, int y) const;
     /**
      * \brief finish wall
      * \param x absolute end width coordinate of the wall
      * \param y absolute end height coordinate of the wall
      */
-    void end_wall(int x, int y);
+    virtual void end_wall(int x, int y);
     /**
      * \brief is line intersect with any wall in container
      * \param old_x relative width coordinate start of the line
@@ -214,29 +218,29 @@ namespace particle
      * \param new_y relative height coordinate end of the line
      * \return true if any wall is intersected, false otherwise
      */
-    bool is_collide(double old_x, double old_y, double new_x, double new_y);
+    virtual bool is_collide(double old_x, double old_y, double new_x, double new_y) const;
     /**
      * \brief draw all walls
      * \param screen drawer
      * \param fade should fade walls or not
      */
-    void draw_walls(const std::shared_ptr<Screen>& screen, bool fade);
+    virtual void draw_walls(const std::shared_ptr<Screen>& screen, bool fade);
     /**
      * \brief too many walls? (max 70)
      * \return true if too many
      */
-    bool is_overflow() const;
+    virtual bool is_overflow() const;
 
     /**
      * \brief print all coordinates of walls
      * \param file file to print to
      */
-    void serialize_walls(std::ostream& file);
+    virtual void serialize_walls(std::ostream& file);
     /**
      * \brief read all coordinates of walls
      * \param file file to read from
      */
-    void deserialize_walls(std::istream& file);
+    virtual void deserialize_walls(std::istream& file);
   };
 }
 

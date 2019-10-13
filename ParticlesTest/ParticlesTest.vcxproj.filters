@@ -1,57 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="GameTest.cpp">
-      <Filter>Test</Filter>
+    <ClCompile Include="Test.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Particles\Game.cpp">
-      <Filter>Src\Source Files</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
+      <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Particles\Screen.cpp">
-      <Filter>Src\Source Files</Filter>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
+      <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Particles\Source.cpp">
-      <Filter>Src\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Particles\Swarm.cpp">
-      <Filter>Src\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Particles\Wall.cpp">
-      <Filter>Src\Source Files</Filter>
+    <ClCompile Include="GameTest.h">
+      <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Particles\Game.h">
-      <Filter>Src\Header Files</Filter>
+    <ClInclude Include="Common.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Particles\Screen.h">
-      <Filter>Src\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Particles\Swarm.h">
-      <Filter>Src\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Particles\Utils.h">
-      <Filter>Src\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Particles\Wall.h">
-      <Filter>Src\Header Files</Filter>
+    <ClInclude Include="Mocks.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{092a94b3-7fed-4ef0-a312-dd9e9169bdeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{a4a68052-773c-4e0c-a214-463605e01306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{398c3682-32e8-46ae-8ff9-5e8cec36289d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{0efe81c4-0b55-4b0c-bd9e-431c60fcef18}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Test">
-      <UniqueIdentifier>{474b3bff-5553-4f5a-85c6-007586addf7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src">
-      <UniqueIdentifier>{a22b21d8-1298-439f-b089-f5efe140e6a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Header Files">
-      <UniqueIdentifier>{9a240664-c110-46ae-9cb7-e1b969d77670}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Source Files">
-      <UniqueIdentifier>{d3c28aa4-7fd1-42a3-b37d-3d0a08f125ad}</UniqueIdentifier>
-    </Filter>
+    <None Include="packages.config">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
