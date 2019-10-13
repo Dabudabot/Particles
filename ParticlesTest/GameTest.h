@@ -284,22 +284,6 @@ TEST_F(GameTest, DrawHelpShowHelp)
   EXPECT_TRUE(game_->is_running());
 }
 
-TEST_F(GameTest, DrawHelpFadeHelp)
-{
-  const Uint8 zero = 0x55;
-  const Uint8 res = zero - 0x3;
-
-  game_->set_help(false);
-
-  EXPECT_CALL(*screen_, print_help(res));
-
-  game_->game_draw_help();
-
-  ASSERT_EQ(game_->get_help_fade(), res);
-  EXPECT_FALSE(game_->is_help_shown());
-  EXPECT_TRUE(game_->is_running());
-}
-
 TEST_F(GameTest, RestoreDefaults)
 {
   Uint8 zero = 0x55;
