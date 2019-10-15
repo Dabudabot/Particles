@@ -9,6 +9,7 @@ particle::Game::Game()
 {
   Game::restore_defaults();
   screen_ = std::make_shared<Screen>();
+  audio_ = std::make_shared<Audio>();
   running_ = true;
   wall_building_ = false;
   show_help_ = false;
@@ -17,12 +18,15 @@ particle::Game::Game()
 
 particle::Game::Game(
   const std::shared_ptr<Screen>& screen,
+  const std::shared_ptr<Audio>& audio,
   const std::shared_ptr<SwarmHost>& swarm_host,
   const std::shared_ptr<WallHost>& wall_host)
 {
   screen_ = screen;
+  audio_ = audio;
   swarm_host_ = swarm_host;
   wall_host_ = wall_host;
+  
   running_ = true;
   wall_building_ = false;
   show_help_ = false;
@@ -35,6 +39,16 @@ int particle::Game::run()
   if (!screen_->init())
   {
     return 1;
+  }
+
+  if (!audio_->init())
+  {
+    return 2;
+  }
+
+  if (!audio_->play_music())
+  {
+    return 3;
   }
 
   // until game run do loop
@@ -171,6 +185,7 @@ bool particle::Game::process_event(SDL_Event& event)
         break;
       case SDL_BUTTON_RIGHT:
         swarm_host_->generate_swarm(event.button.x, event.button.y);
+        audio_->play_sound(event.button.x, event.button.y);
         break;
       default:
         break;

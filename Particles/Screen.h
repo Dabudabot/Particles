@@ -62,7 +62,7 @@ namespace particle
     /**
      * \brief de init SDL lib
      */
-    ~Screen();
+    virtual ~Screen();
 
     /**
      * \brief init SDL lib

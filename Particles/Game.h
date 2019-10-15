@@ -7,6 +7,7 @@
 #include "Screen.h"
 #include "Swarm.h"
 #include "Wall.h"
+#include "Audio.h"
 
 #include <memory>
 
@@ -23,6 +24,10 @@ namespace particle {
      * \brief display of the game elements
      */
     std::shared_ptr<Screen> screen_;
+    /**
+     * \brief sound of the game elements
+     */
+    std::shared_ptr<Audio> audio_;
     /**
      * \brief particles control
      */
@@ -68,6 +73,7 @@ namespace particle {
     std::shared_ptr<Screen> get_screen() const { return screen_; }
     std::shared_ptr<SwarmHost> get_swarm_host() const { return swarm_host_; }
     std::shared_ptr<WallHost> get_wall_host() const { return wall_host_; }
+    std::shared_ptr<Audio> get_audio() const { return audio_; }
 
     // delete unused ctors
     Game(const Game&) = delete;
@@ -79,7 +85,8 @@ namespace particle {
      * \brief default ctor to init pointers
      */
     Game();
-    Game(const std::shared_ptr<Screen>& screen, 
+    Game(const std::shared_ptr<Screen>& screen,
+      const std::shared_ptr<Audio>& audio,
       const std::shared_ptr<SwarmHost>& swarm_host,
       const std::shared_ptr<WallHost>& wall_host);
     virtual ~Game() = default;
