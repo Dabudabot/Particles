@@ -7,6 +7,14 @@
 #include "../Particles/Wall.cpp"
 #include "../Particles/Swarm.cpp"
 
+class AudioMock : public particle::Audio
+{
+public:
+  MOCK_METHOD(bool, init, (), (override));
+  MOCK_CONST_METHOD0(play_music, bool());
+  MOCK_CONST_METHOD2(play_sound, bool(const int x, const int y));
+};
+
 class ScreenMock : public particle::Screen
 {
 public:

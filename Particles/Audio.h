@@ -216,11 +216,11 @@ namespace particle
     Audio& operator= (Audio&&) = delete;
 
     Audio();
-    ~Audio();
+    virtual ~Audio();
 
-    bool init();
-    bool play_music() const;
-    bool play_sound(const int x, const int y);
+    virtual bool init();
+    virtual bool play_music() const;
+    virtual bool play_sound(const int x, const int y);
 
   };
 }

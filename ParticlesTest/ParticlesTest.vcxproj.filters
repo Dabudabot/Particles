@@ -33,6 +33,9 @@
     <ClInclude Include="WallTest.h">
       <Filter>Tests</Filter>
     </ClInclude>
+    <ClInclude Include="AudioTest.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

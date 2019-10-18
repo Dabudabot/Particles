@@ -2,7 +2,7 @@
 
 #include "Common.h"
 #include "Mocks.h"
-#include <stdio.h>
+#include <cstdio>
 
 class GameTest : public ::testing::Test
 {

@@ -40,6 +40,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioTest.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="Mocks.h" />
     <ClInclude Include="ScreenTest.h" />
