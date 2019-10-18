@@ -8,6 +8,7 @@ class GameTest : public ::testing::Test
 {
 protected:
 
+  std::shared_ptr<AudioMock> audio_;
   std::shared_ptr<ScreenMock> screen_;
   std::shared_ptr<WallHostMock> wall_host_;
   std::shared_ptr<SwarmHostMock> swarm_host_;
@@ -16,12 +17,14 @@ protected:
 
   void SetUp() override
   {
+    audio_ = std::make_shared<AudioMock>();
     screen_ = std::make_shared<ScreenMock>();
     swarm_host_ = std::make_shared<SwarmHostMock>();
     wall_host_ = std::make_shared<WallHostMock>();
 
     game_ = std::make_shared<GameMock>(
       screen_,
+      audio_,
       swarm_host_,
       wall_host_
     );
@@ -353,5 +356,5 @@ TEST_F(GameTest, RunFailInit)
 
   const auto result = game_->game_run();
 
-  ASSERT_EQ(result, 1);
+  ASSERT_EQ(result, 10);
 }

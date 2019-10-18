@@ -6,6 +6,7 @@
 #include "../Particles/Screen.cpp"
 #include "../Particles/Wall.cpp"
 #include "../Particles/Swarm.cpp"
+#include "../Particles/Audio.cpp"
 
 class AudioMock : public particle::Audio
 {
@@ -71,9 +72,10 @@ public:
   GameMock() : Game() {};
 
   GameMock(const std::shared_ptr<ScreenMock>& screen,
+    const std::shared_ptr<AudioMock>& audio,
     const std::shared_ptr<SwarmHostMock>& swarm_host,
     const std::shared_ptr<WallHostMock>& wall_host) :
-    Game(screen, swarm_host, wall_host)
+    Game(screen, audio, swarm_host, wall_host)
   {};
 
   MOCK_METHOD(int, run, (), (override));
