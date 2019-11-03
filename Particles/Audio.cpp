@@ -80,45 +80,44 @@ bool particle::Audio::play_music() const
 
 bool particle::Audio::play_sound(const int x, const int y)
 {
-  const auto sound = sounds_[sequence_[cur_seq_]];
+  auto channel = 0;
+  Sint16 dir = 0;
+  Sint8 dist = 0;
+  auto index = 0;
+  auto sound = sounds_[index];
 
-  auto channel = sequence_[cur_seq_];
-
+  // find free channel
   while (Mix_Playing(channel))
   {
     channel++;
   }
+
+  // find sound
+  index = (SOUNDS_AMOUNT-1) - (SOUNDS_AMOUNT-1) * y / Screen::screen_height;
+  sound = sounds_[index];
 
   if (Mix_PlayChannel(channel, sound, 0) == -1)
   {
     return false;
   }
 
-  const auto new_x = x - Screen::screen_width / 2;
-  const auto new_y = -1 * (y - Screen::screen_height / 2);
+  // find dir
+  if (x > Screen::screen_width / 2)
+  {
+    dir = 90;
+  }
+  else
+  {
+    dir = 270;
+  }
 
-  const auto r = sqrt(new_x*new_x + new_y*new_y);
-  auto a = atan2(new_y, new_x) * 180 / PI;
+  // find dist
+  dist = 100 * abs(Screen::screen_width / 2 - x) / (Screen::screen_width / 2);
 
-  if (a < 0) a += 360;
-
-  a -= 360;
-  a = -a;
-  a += 90;
-
-  if (a > 360) a -= 360;
-
-  if (Mix_SetPosition(channel, a, r) == -1)
+  if (Mix_SetPosition(channel, dir, dist) == -1)
   {
     return false;
   }
 
-  cur_seq_++;
-
-  if (cur_seq_ > SEQ_AMOUNT)
-  {
-    cur_seq_ = 0;
-  }
-  
   return true;
 }

@@ -16,23 +16,6 @@ particle::Game::Game()
   help_fade_ = 0xff;
 }
 
-particle::Game::Game(
-  const std::shared_ptr<Screen>& screen,
-  const std::shared_ptr<Audio>& audio,
-  const std::shared_ptr<SwarmHost>& swarm_host,
-  const std::shared_ptr<WallHost>& wall_host)
-{
-  screen_ = screen;
-  audio_ = audio;
-  swarm_host_ = swarm_host;
-  wall_host_ = wall_host;
-  
-  running_ = true;
-  wall_building_ = false;
-  show_help_ = false;
-  help_fade_ = 0xff;
-}
-
 int particle::Game::run()
 {
   // if failed to init exit with error

@@ -67,12 +67,12 @@ namespace particle
      * \brief getter of the absolute width coordinate of the particle 
      * \return absolute width coordinate of the particle 
      */
-    virtual int get_x() const;
+    int get_x() const;
     /**
      * \brief getter of the absolute height coordinate of the particle 
      * \return absolute height coordinate of the particle 
      */
-    virtual int get_y() const;
+    int get_y() const;
     /**
      * \brief getter of the color of the particle
      * \return color of the particle
@@ -85,7 +85,7 @@ namespace particle
      * \param color color of the particle
      * \param wall_host keeper of the walls to calculate collision
      */
-    virtual void update(int interval, Uint32& color, const std::shared_ptr<WallHost>& wall_host);
+    void update(int interval, Uint32& color, const std::shared_ptr<WallHost>& wall_host);
   };
 
   /**
@@ -128,24 +128,24 @@ namespace particle
      * \param origin_y absolute height coordinate of starting point of explosion
      */
     Swarm(int origin_x, int origin_y);
-    virtual ~Swarm() = default;
+    ~Swarm() = default;
 
     /**
      * \brief delete percent of particles in current swarm
      * \param percent percent of particles to delete
      */
-    virtual void delete_particles(unsigned int percent);
+    void delete_particles(unsigned int percent);
     /**
      * \brief getter of container of particles
      * \return container of particles
      */
-    virtual Particles get_particles() const { return particles_; };
+    Particles get_particles() const { return particles_; };
     /**
      * \brief update all particles in current swarm
      * \param elapsed time from start of the game
      * \param wall_host control of the walls
      */
-    virtual void update(int elapsed, const std::shared_ptr<WallHost>& wall_host);
+    void update(int elapsed, const std::shared_ptr<WallHost>& wall_host);
   };
 
   /**
@@ -172,25 +172,25 @@ namespace particle
     SwarmHost& operator= (SwarmHost&&) = delete;
 
     SwarmHost() = default;
-    virtual ~SwarmHost() = default;
+    ~SwarmHost() = default;
 
     /**
      * \brief create new swarm
      * \param x original absolute width coordinate
      * \param y original absolute height coordinate
      */
-    virtual void generate_swarm(int x, int y);
+    void generate_swarm(int x, int y);
     /**
      * \brief update all swarms
      * \param elapsed time from start of the game
      * \param wall_host control of the walls
      */
-    virtual void update(int elapsed, const std::shared_ptr<WallHost>& wall_host);
+    void update(int elapsed, const std::shared_ptr<WallHost>& wall_host);
     /**
      * \brief sum all particles of all swarms
      * \return container of all particles in world
      */
-    virtual Particles get_particles();
+    Particles get_particles();
   };
 }
 
