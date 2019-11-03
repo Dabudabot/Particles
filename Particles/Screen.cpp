@@ -8,6 +8,8 @@
 #include <cstdio>
 #include "Utils.h"
 
+#include <Windows.h>
+
 particle::Screen::Screen() :
   window_(nullptr),
   renderer_(nullptr),
@@ -151,11 +153,25 @@ bool particle::Screen::init()
 	//check init
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
 	{
+    MessageBox(
+      nullptr,
+      LPCSTR("SDL_INIT_EVERYTHING failed"),
+      LPCSTR("Screen init"), 
+      MB_OK
+    );
+
 		return false;
 	}
 
-  if (TTF_Init() < 0) {
-    
+  if (TTF_Init() < 0) 
+  {
+    MessageBox(
+      nullptr,
+      LPCSTR("TTF_Init failed"),
+      LPCSTR("Screen init"),
+      MB_OK
+    );
+
     return false;
   }
 
@@ -171,6 +187,13 @@ bool particle::Screen::init()
 	//check window
 	if (window_ == nullptr)
 	{
+    MessageBox(
+      nullptr,
+      LPCSTR("Window not created"),
+      LPCSTR("Screen init"),
+      MB_OK
+    );
+
 		SDL_Quit();
 		return false;
 	}
@@ -181,6 +204,13 @@ bool particle::Screen::init()
 	//check renderer
 	if (renderer_ == nullptr)
 	{
+    MessageBox(
+      nullptr,
+      LPCSTR("Renderer error"),
+      LPCSTR("Screen init"),
+      MB_OK
+    );
+
 		SDL_DestroyWindow(window_);
 		SDL_Quit();
 		return false;
@@ -197,6 +227,13 @@ bool particle::Screen::init()
 	//check texture
 	if (texture_ == nullptr)
 	{
+    MessageBox(
+      nullptr,
+      LPCSTR("Texture error"),
+      LPCSTR("Screen init"),
+      MB_OK
+    );
+
 		SDL_DestroyRenderer(renderer_);
 		SDL_DestroyWindow(window_);
 		SDL_Quit();

@@ -29,10 +29,7 @@ int particle::Game::run()
     return 2;
   }
 
-  if (!audio_->play_music())
-  {
-    return 3;
-  }
+  audio_->play_music();
 
   // until game run do loop
   while (running_)

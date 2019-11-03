@@ -5,30 +5,21 @@ VisualStudioVersion = 16.0.29123.88
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Particles", "Particles\Particles.vcxproj", "{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ParticlesSetup", "ParticlesSetup\ParticlesSetup.vdproj", "{82E681DD-B7F8-4623-9FDE-62147A7BCDC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|ARM = Debug|ARM
-		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|ARM = Release|ARM
-		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Debug|ARM.ActiveCfg = Debug|Win32
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Debug|ARM64.ActiveCfg = Debug|Win32
 		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Debug|x64.ActiveCfg = Debug|x64
 		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Debug|x64.Build.0 = Debug|x64
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Debug|x86.ActiveCfg = Debug|Win32
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Debug|x86.Build.0 = Debug|Win32
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Release|ARM.ActiveCfg = Release|Win32
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Release|ARM64.ActiveCfg = Release|Win32
 		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Release|x64.ActiveCfg = Release|x64
 		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Release|x64.Build.0 = Release|x64
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Release|x86.ActiveCfg = Release|Win32
-		{4563B9F4-E703-4EE2-9BDC-C5D0415ACAE0}.Release|x86.Build.0 = Release|Win32
+		{82E681DD-B7F8-4623-9FDE-62147A7BCDC0}.Debug|x64.ActiveCfg = Debug
+		{82E681DD-B7F8-4623-9FDE-62147A7BCDC0}.Release|x64.ActiveCfg = Release
+		{82E681DD-B7F8-4623-9FDE-62147A7BCDC0}.Release|x64.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

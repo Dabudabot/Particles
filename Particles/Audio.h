@@ -14,8 +14,8 @@ namespace particle
     Mix_Music* music_;
     std::vector<Mix_Chunk*> sounds_;
 
-    const char* music_filename_ = R"(..\Res\audio\Ambient.mp3)";
-    const char* sounds_folder_ = R"(..\Res\audio\A)";
+    const char* music_filename_ = R"(..\audio\Ambient.mp3)";
+    const char* sounds_folder_ = R"(..\audio\A)";
 
   public:
 
