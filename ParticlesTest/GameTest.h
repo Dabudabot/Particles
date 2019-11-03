@@ -353,6 +353,7 @@ TEST_F(GameTest, Load)
 TEST_F(GameTest, RunFailInit)
 {
   EXPECT_CALL(*screen_, init).WillOnce(::testing::Return(false));
+
   const auto result = game_->game_run();
 
   ASSERT_EQ(result, 10);
