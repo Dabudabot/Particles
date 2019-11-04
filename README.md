@@ -21,5 +21,5 @@ f10 - quick load
 lmb - draw wall
 rmb - explode particles
 
-![Screenshot](data\screenshot.png)
-![Screenshot2](data\screenshot2.png)
+![Screenshot](data/screenshot.png)
+![Screenshot2](data/screenshot2.png)
