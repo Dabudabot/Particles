@@ -43,11 +43,11 @@ namespace particle
     /**
      * \brief game window width
      */
-    const static int screen_width = 1200;
+    int screen_width;
     /**
      * \brief game window height
      */
-    const static int screen_height = 700;
+    int screen_height;
 
     // delete unused ctors
     Screen(const Screen&) = delete;

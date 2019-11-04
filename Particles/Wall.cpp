@@ -7,11 +7,11 @@
 #include "Utils.h"
 #include <algorithm>
 
-particle::Wall::Wall(const int x, const int y)
+particle::Wall::Wall(const int x, const int y, const int max_x, const int max_y)
   : a_(0), b_(0), c_(0), fade_counter_(0)
 {
-  coordinates_.start.x = Screen::to_relative(x, Screen::screen_width);
-  coordinates_.start.y = Screen::to_relative(y, Screen::screen_height);
+  coordinates_.start.x = Screen::to_relative(x, max_x);
+  coordinates_.start.y = Screen::to_relative(y, max_y);
   coordinates_.end.x = coordinates_.start.x;
   coordinates_.end.y = coordinates_.start.y;
 }
@@ -36,15 +36,20 @@ void particle::Wall::calc_abc()
   c_ = coordinates_.start.x * coordinates_.end.y - coordinates_.end.x * coordinates_.start.y;
 }
 
-void particle::Wall::move_end(const int x, const int y)
+void particle::Wall::move_end(const int x, const int y, const int max_x, const int max_y)
 {
-  coordinates_.end.x = Screen::to_relative(x, Screen::screen_width);
-  coordinates_.end.y = Screen::to_relative(y, Screen::screen_height);
+  coordinates_.end.x = Screen::to_relative(x, max_x);
+  coordinates_.end.y = Screen::to_relative(y, max_y);
 
   calc_abc();
 }
 
-void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool fade)
+void particle::Wall::draw_wall(
+  const std::shared_ptr<Screen>& screen, 
+  const bool fade, 
+  const int max_x, 
+  const int max_y
+)
 {
   if (fade_counter_ == 0 && fade)
   {
@@ -61,10 +66,10 @@ void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool
   }
 
   const auto color = generate_color<Uint8, Uint32>(fade_counter_);
-  auto x1 = Screen::to_abs(coordinates_.start.x, Screen::screen_width);
-  auto y1 = Screen::to_abs(coordinates_.start.y, Screen::screen_height);
-  auto x2 = Screen::to_abs(coordinates_.end.x, Screen::screen_width);
-  auto y2 = Screen::to_abs(coordinates_.end.y, Screen::screen_height);
+  auto x1 = Screen::to_abs(coordinates_.start.x, max_x);
+  auto y1 = Screen::to_abs(coordinates_.start.y, max_y);
+  auto x2 = Screen::to_abs(coordinates_.end.x, max_x);
+  auto y2 = Screen::to_abs(coordinates_.end.y, max_y);
 
   // Bresenham's line algorithm
   const auto steep = (std::abs(y2 - y1) > std::abs(x2 - x1));
@@ -87,9 +92,9 @@ void particle::Wall::draw_wall(const std::shared_ptr<Screen>& screen, const bool
   const auto y_step = (y1 < y2) ? 1 : -1;
   auto y = y1;
 
-  const auto max_x = x2;
+  const auto max_x1 = x2;
 
-  for (auto x = x1; x < max_x; x++)
+  for (auto x = x1; x < max_x1; x++)
   {
     if (steep)
     {
@@ -158,20 +163,25 @@ bool particle::Wall::is_collide(const D_Point p1, const D_Point q1, const D_Poin
   return false; // Doesn't fall in any of the above cases 
 }
 
-void particle::WallHost::start_wall(const int x, const int y)
+void particle::WallHost::start_wall(const int x, const int y, const int max_x, const int max_y)
 {
-  active_wall_ = std::make_shared<Wall>(x , y);
+  active_wall_ = std::make_shared<Wall>(x , y, max_x, max_y);
 }
 
-void particle::WallHost::move_wall(const std::shared_ptr<Screen>& screen, const int x, const int y) const
+void particle::WallHost::move_wall(
+  const std::shared_ptr<Screen>& screen, 
+  const int x, const int y, 
+  const int max_x, const int max_y) const
 {
-  active_wall_->move_end(x, y);
-  active_wall_->draw_wall(screen, false);
+  active_wall_->move_end(x, y, max_x, max_y);
+  active_wall_->draw_wall(screen, false, max_x, max_y);
 }
 
-void particle::WallHost::end_wall(const int x, const int y)
+void particle::WallHost::end_wall(
+  const int x, const int y,
+  const int max_x, const int max_y)
 {
-  active_wall_->move_end(x, y);
+  active_wall_->move_end(x, y, max_x, max_y);
   walls_.push_back(active_wall_);
   active_wall_ = nullptr;
 }
@@ -198,16 +208,20 @@ bool particle::WallHost::is_collide(
   return false;
 }
 
-void particle::WallHost::draw_walls(const std::shared_ptr<Screen>& screen, const bool fade)
+void particle::WallHost::draw_walls(
+  const std::shared_ptr<Screen>& screen, 
+  const bool fade,
+  const int max_x, 
+  const int max_y)
 {
   if (nullptr != active_wall_)
   {
-    active_wall_->draw_wall(screen, fade);
+    active_wall_->draw_wall(screen, fade, max_x, max_y);
   }
   
   for (const auto& wall : walls_)
   {
-    wall->draw_wall(screen, fade);
+    wall->draw_wall(screen, fade, max_x, max_y);
   }
 }
 

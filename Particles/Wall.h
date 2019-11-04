@@ -114,7 +114,7 @@ namespace particle
      * \param r point
      * \return true if lies
      */
-    bool on_segment(D_Point p, D_Point q, D_Point r) const;
+    [[nodiscard]] bool on_segment(D_Point p, D_Point q, D_Point r) const;
     /**
      * \brief To find orientation of ordered triplet (p, q, r)
      * \param p point
@@ -130,8 +130,10 @@ namespace particle
      * \brief ctor to start wall
      * \param x width coordinates of the start of the wall
      * \param y height coordinates of the start of the wall
+     * \param max_x max width coordinates of the start of the wall
+     * \param max_y max height coordinates of the start of the wall
      */
-    Wall(int x, int y);
+    Wall(int x, int y, int max_x, int max_y);
     /**
      * \brief ctor to build wall from coordinates
      * \param coordinates coordinates of the wall
@@ -142,14 +144,18 @@ namespace particle
      * \brief move end point of the wall
      * \param x width coordinates of the end of the wall
      * \param y height coordinates of the end of the wall
+     * \param max_x max width coordinates of the end of the wall
+     * \param max_y max height coordinates of the end of the wall
      */
-    void move_end(int x, int y);
+    void move_end(int x, int y, int max_x, int max_y);
     /**
      * \brief draw wall on the screen with fade
      * \param screen screen to draw
      * \param fade should fade it or not
+     * \param max_x max width coordinates of the end of the wall
+     * \param max_y max height coordinates of the end of the wall
      */
-    void draw_wall(const std::shared_ptr<Screen>& screen, bool fade);
+    void draw_wall(const std::shared_ptr<Screen>& screen, bool fade, int max_x, int max_y);
     /**
      * \brief does p1-q1 line intersect p2-q2
      * \param p1 start coordinates of first line
@@ -158,7 +164,7 @@ namespace particle
      * \param q2 end coordinates of second line
      * \return true if intersect, false otherwise
      */
-    bool is_collide(D_Point p1, D_Point q1, D_Point p2, D_Point q2) const;
+    [[nodiscard]] bool is_collide(D_Point p1, D_Point q1, D_Point p2, D_Point q2) const;
     /**
      * \brief getter of the address of the coordinates of the wall
      * \return address of the coordinates of the wall
@@ -181,8 +187,14 @@ namespace particle
     std::shared_ptr<Wall> active_wall_;
 
   public:
-    std::vector<std::shared_ptr<Wall>> get_walls() const { return walls_; }
-    std::shared_ptr<Wall> get_active_wall() const { return active_wall_; }
+    [[nodiscard]] std::vector<std::shared_ptr<Wall>> get_walls() const { return walls_; }
+    [[nodiscard]] std::shared_ptr<Wall> get_active_wall() const { return active_wall_; }
+
+    // delete unused ctors
+    WallHost(const WallHost&) = delete;
+    WallHost(WallHost&&) = delete;
+    WallHost& operator= (const WallHost&) = delete;
+    WallHost& operator= (WallHost&&) = delete;
 
     ~WallHost() = default;
 
@@ -195,21 +207,27 @@ namespace particle
      * \brief start active wall
      * \param x absolute start width coordinate of the wall
      * \param y absolute start height coordinate of the wall
+     * \param max_x absolute start width coordinate of the wall
+     * \param max_y absolute start height coordinate of the wall
      */
-    void start_wall(int x, int y);
+    void start_wall(int x, int y, int max_x, int max_y);
     /**
      * \brief moving end of active wall by coordinates
      * \param screen drawer of the wall
      * \param x absolute end width coordinate of the wall
      * \param y absolute end height coordinate of the wall
+     * \param max_x max absolute end width coordinate of the wall
+     * \param max_y max absolute end height coordinate of the wall
      */
-    void move_wall(const std::shared_ptr<Screen>& screen, int x, int y) const;
+    void move_wall(const std::shared_ptr<Screen>& screen, int x, int y, int max_x, int max_y) const;
     /**
      * \brief finish wall
      * \param x absolute end width coordinate of the wall
      * \param y absolute end height coordinate of the wall
+     * \param max_x max absolute end width coordinate of the wall
+     * \param max_y max absolute end height coordinate of the wall
      */
-    void end_wall(int x, int y);
+    void end_wall(int x, int y, int max_x, int max_y);
     /**
      * \brief is line intersect with any wall in container
      * \param old_x relative width coordinate start of the line
@@ -218,18 +236,24 @@ namespace particle
      * \param new_y relative height coordinate end of the line
      * \return true if any wall is intersected, false otherwise
      */
-    bool is_collide(double old_x, double old_y, double new_x, double new_y) const;
+    [[nodiscard]] bool is_collide(double old_x, double old_y, double new_x, double new_y) const;
     /**
      * \brief draw all walls
      * \param screen drawer
      * \param fade should fade walls or not
+     * \param max_x max absolute end width coordinate of the wall
+     * \param max_y max absolute end height coordinate of the wall
      */
-    void draw_walls(const std::shared_ptr<Screen>& screen, bool fade);
+    void draw_walls(
+      const std::shared_ptr<Screen>& screen, 
+      bool fade,
+      int max_x,
+      int max_y);
     /**
      * \brief too many walls? (max 70)
      * \return true if too many
      */
-    bool is_overflow() const;
+    [[nodiscard]] bool is_overflow() const;
 
     /**
      * \brief print all coordinates of walls

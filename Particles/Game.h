@@ -40,7 +40,6 @@ namespace particle {
      * \brief is game running or end
      */
     bool running_;
-
     /**
      * \brief is we are in wall building mode (after click)
      */
@@ -49,16 +48,26 @@ namespace particle {
      * \brief is we showing help elements (tab hold)
      */
     bool show_help_;
-
+    /**
+     * \brief is we showing is autoplay enabled
+     */
+    bool is_autoplay_;
     /**
      * \brief fade counter of help elements
      */
     Uint8 help_fade_;
 
+    Uint32 time_;
+
+    Uint8 current_file_;
+
+    std::vector<std::string> files;
+
     /**
      * \brief name of the quick save file
      */
-    const char* filename_ = "../save/save.save";
+    const char* filename_ = "../saves/save.save";
+    const char* save_dir_ = "../saves";
 
     /**
      * \brief add help elements to the screen
@@ -76,6 +85,10 @@ namespace particle {
      * \brief jump to initial state
      */
     void restore_defaults();
+
+    void autoplay(Uint32 elapsed);
+
+    void load_all();
 
   public:
 

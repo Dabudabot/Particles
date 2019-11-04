@@ -4,6 +4,7 @@
 
 #include "Game.h"
 #include <fstream>
+#include <filesystem>
 
 particle::Game::Game()
 {
@@ -13,7 +14,11 @@ particle::Game::Game()
   running_ = true;
   wall_building_ = false;
   show_help_ = false;
+  is_autoplay_ = false;
   help_fade_ = 0xff;
+  time_ = 0;
+  current_file_ = 0;
+  load_all();
 }
 
 int particle::Game::run()
@@ -29,6 +34,7 @@ int particle::Game::run()
     return 2;
   }
 
+  // ReSharper disable once CppExpressionWithoutSideEffects
   audio_->play_music();
 
   // until game run do loop
@@ -40,6 +46,8 @@ int particle::Game::run()
     // get time from the beginning
     const auto elapsed = SDL_GetTicks();
 
+    if (is_autoplay_) autoplay(elapsed);
+    
     // update all available swarms
     swarm_host_->update(elapsed, wall_host_);
 
@@ -49,9 +57,11 @@ int particle::Game::run()
     // draw each particle
     for (const auto& particle : particles)
     {
+      if (particle->dead()) continue;
+
       screen_->set_pixel(
-        particle->get_x(),
-        particle->get_y(),
+        particle->get_x(screen_->screen_width),
+        particle->get_y(screen_->screen_height),
         particle->get_color()
       );
     }
@@ -60,7 +70,7 @@ int particle::Game::run()
     screen_->motion_blur();
 
     // draw walls if required
-    wall_host_->draw_walls(screen_, !show_help_);
+    wall_host_->draw_walls(screen_, !show_help_, screen_->screen_width, screen_->screen_height);
 
     // process clicks
     SDL_Event event;
@@ -96,6 +106,8 @@ bool particle::Game::process_event(SDL_Event& event)
     switch (event.key.keysym.sym)
     {
     case SDLK_ESCAPE:
+      return false;
+    case SDLK_SPACE:
       // esc resets the game
       this->restore_defaults();
       break;
@@ -110,6 +122,10 @@ bool particle::Game::process_event(SDL_Event& event)
     case SDLK_F10:
       // quick load
       load(filename_);
+      break;
+    case SDLK_F8:
+      if (!is_autoplay_) is_autoplay_ = true;
+      else is_autoplay_ = false;
       break;
     default:
       break;
@@ -134,7 +150,8 @@ bool particle::Game::process_event(SDL_Event& event)
       switch(event.button.button)
       {
       case SDL_BUTTON_LEFT:
-        wall_host_->end_wall(event.button.x, event.button.y);
+        wall_host_->end_wall(event.button.x, event.button.y, 
+          screen_->screen_width, screen_->screen_height);
         wall_building_ = false;
         break;
       case SDL_BUTTON_RIGHT:
@@ -146,7 +163,8 @@ bool particle::Game::process_event(SDL_Event& event)
     }
     else if(SDL_MOUSEMOTION == event.type)
     {
-      wall_host_->move_wall(screen_, event.button.x, event.button.y);
+      wall_host_->move_wall(screen_, event.button.x, event.button.y, 
+        screen_->screen_width, screen_->screen_height);
     }
   }
   else
@@ -159,13 +177,28 @@ bool particle::Game::process_event(SDL_Event& event)
         
         if (!wall_host_->is_overflow())
         {
-          wall_host_->start_wall(event.button.x, event.button.y);
+          wall_host_->start_wall(
+            event.button.x, 
+            event.button.y, 
+            screen_->screen_width,
+            screen_->screen_height
+          );
           wall_building_ = true;
         }
         break;
       case SDL_BUTTON_RIGHT:
-        swarm_host_->generate_swarm(event.button.x, event.button.y);
-        audio_->play_sound(event.button.x, event.button.y);
+        swarm_host_->generate_swarm(
+          event.button.x, 
+          event.button.y, 
+          screen_->screen_width, 
+          screen_->screen_height
+        );
+        audio_->play_sound(
+          event.button.x, 
+          event.button.y, 
+          screen_->screen_width, 
+          screen_->screen_height
+        );
         break;
       default:
         break;
@@ -227,4 +260,45 @@ void particle::Game::load(const char* filename)
   wall_host_->deserialize_walls(file);
   
   file.close();
+}
+
+void particle::Game::autoplay(const Uint32 elapsed)
+{
+  if (time_ == 0 || elapsed - time_ > 60000)
+  {
+    time_ = elapsed;
+    load(files[current_file_].c_str());
+    current_file_++;
+    if (current_file_ >= files.size()) current_file_ = 0;
+  }
+
+  srand(elapsed);
+  const auto r = (rand() % 100) + 1;
+
+  if (1 == r)
+  {
+    const auto x = (rand() % screen_->screen_width) + 1;
+    const auto y = (rand() % screen_->screen_height) + 1;
+
+    swarm_host_->generate_swarm(
+      x, 
+      y,
+      screen_->screen_width,
+      screen_->screen_height
+    );
+    audio_->play_sound(
+      x, 
+      y, 
+      screen_->screen_width, 
+      screen_->screen_height
+    );
+  }
+}
+
+void particle::Game::load_all()
+{
+  for (const auto& entry : std::filesystem::directory_iterator(save_dir_))
+  {
+    files.push_back(entry.path().string());
+  }
 }

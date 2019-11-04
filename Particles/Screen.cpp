@@ -15,7 +15,9 @@ particle::Screen::Screen() :
   renderer_(nullptr),
   texture_(nullptr),
   buffer_(nullptr),
-  blur_buffer_(nullptr)
+  blur_buffer_(nullptr),
+  screen_width(0),
+  screen_height(0)
 {
 	srand(static_cast<unsigned int>(std::time(nullptr)));
 }
@@ -66,30 +68,34 @@ void particle::Screen::set_text(
 void particle::Screen::print_help(const Uint8 fade) const
 {
   const SDL_Color color = { fade, fade, fade, fade };
-  const auto font = TTF_OpenFont(R"(C:\Windows\Fonts\impact.ttf)", 24);
+  const auto font = TTF_OpenFont(R"(..\font\impact.ttf)", 24);
 
   if (!font) return;
 
-  set_text("esc", color, font, 50, 50);
+  set_text("space", color, font, 50, 50);
   set_text("lbm", color, font, 50, 75);
   set_text("rbm", color, font, 50, 100);
   set_text("tab", color, font, 50, 125);
-  set_text("F9 ", color, font, 50, 150);
-  set_text("F10", color, font, 50, 175);
+  set_text("F8", color, font, 50, 150);
+  set_text("F9 ", color, font, 50, 175);
+  set_text("F10", color, font, 50, 200);
+  set_text("esc", color, font, 50, 225);
 
-  set_text("- reset", color, font, 100, 50);
+  set_text("- reset", color, font, 120, 50);
   set_text("- explode", color, font, 100, 75);
   set_text("- start/end wall", color, font, 100, 100);
   set_text("- show walls & help", color, font, 100, 125);
-  set_text("- quick save", color, font, 100, 150);
-  set_text("- quick load", color, font, 100, 175);
+  set_text("- autoplay", color, font, 100, 150);
+  set_text("- quick save", color, font, 100, 175);
+  set_text("- quick load", color, font, 100, 200);
+  set_text("- exit", color, font, 100, 225);
 
   SDL_RenderPresent(renderer_);
 }
 
 void particle::Screen::set_background(const Uint32 color) const
 {
-	SDL_memset4(buffer_, color, screen_width*screen_height);
+	SDL_memset4(buffer_, color, size_t(screen_width)*screen_height);
 }
 
 void particle::Screen::present() const
@@ -138,12 +144,12 @@ void particle::Screen::motion_blur() const
   }
 
   // copy to blur buffer
-  SDL_memcpy4(blur_buffer_, buffer_, screen_width * screen_height);
+  SDL_memcpy4(blur_buffer_, buffer_, size_t(screen_width) * screen_height);
 }
 
 void particle::Screen::update() const
 {
-	SDL_UpdateTexture(texture_, nullptr, buffer_, screen_width * sizeof(Uint32));
+	SDL_UpdateTexture(texture_, nullptr, buffer_, unsigned int(screen_width) * sizeof(Uint32));
   SDL_RenderClear(renderer_);
 	SDL_RenderCopy(renderer_, texture_, nullptr, nullptr);
 }
@@ -182,7 +188,9 @@ bool particle::Screen::init()
 		SDL_WINDOWPOS_UNDEFINED,
 		screen_width,
 		screen_height,
-		SDL_WINDOW_SHOWN);
+    SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+  SDL_GetWindowSize(window_, &screen_width, &screen_height);
 
 	//check window
 	if (window_ == nullptr)
@@ -241,10 +249,10 @@ bool particle::Screen::init()
 	}
 
 	//create buffer
-	buffer_ = new Uint32[screen_width*screen_height];
-  blur_buffer_ = new Uint32[screen_width * screen_height];
-  SDL_memset4(buffer_, 0, screen_width * screen_height);
-  SDL_memset4(blur_buffer_, 0, screen_width * screen_height);
+	buffer_ = new Uint32[size_t(screen_width)*screen_height];
+  blur_buffer_ = new Uint32[size_t(screen_width) * screen_height];
+  SDL_memset4(buffer_, 0, size_t(screen_width) * screen_height);
+  SDL_memset4(blur_buffer_, 0, size_t(screen_width) * screen_height);
 
 	return true;
 }

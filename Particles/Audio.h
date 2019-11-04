@@ -29,8 +29,13 @@ namespace particle
     ~Audio();
 
     bool init();
-    bool play_music() const;
-    bool play_sound(const int x, const int y);
+    bool play_music() const;  // NOLINT(modernize-use-nodiscard)
+    bool play_sound(
+      int x, 
+      int y, 
+      int max_x,
+      int max_y
+    );
 
   };
 }
