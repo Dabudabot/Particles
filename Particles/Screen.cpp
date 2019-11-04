@@ -73,8 +73,8 @@ void particle::Screen::print_help(const Uint8 fade) const
   if (!font) return;
 
   set_text("space", color, font, 50, 50);
-  set_text("lbm", color, font, 50, 75);
-  set_text("rbm", color, font, 50, 100);
+  set_text("lmb", color, font, 50, 75);
+  set_text("rmb", color, font, 50, 100);
   set_text("tab", color, font, 50, 125);
   set_text("F8", color, font, 50, 150);
   set_text("F9 ", color, font, 50, 175);
