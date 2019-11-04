@@ -1,14 +1,12 @@
-## Current x64 build: Particles
+## Current x64 build: [Particles](https://github.com/Dabudabot/Particles/blob/master/build/Particles.msi "Particles")
 
 # Particles: SDL2 project
 
-based on Udemy course: 
-
-SDL2: libsdl.org
+Based on [Udemy course](https://www.udemy.com/course/free-learn-c-tutorial-beginners "Udemy course"), implemented using [SDL2](libsdl.org "SDL2") library.
 
 ## Description
 
-Simple relaxing/meditation game
+Simple relaxing/meditation ~~game~~ screensaver
 
 ## Controls
 
