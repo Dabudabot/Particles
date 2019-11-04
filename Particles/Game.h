@@ -58,7 +58,7 @@ namespace particle {
     /**
      * \brief name of the quick save file
      */
-    const char* filename_ = "save.save";
+    const char* filename_ = "../save/save.save";
 
     /**
      * \brief add help elements to the screen
