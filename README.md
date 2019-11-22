@@ -11,15 +11,20 @@ Simple relaxing/meditation ~~game~~ screensaver
 ## Controls
 
 esc - exit
+
 tab - help
+
 space - reset
 
 f8  - autoplay
+
 f9  - quick save
+
 f10 - quick load
 
 lmb - draw wall
+
 rmb - explode particles
 
-![Screenshot](data\screenshot.png)
-![Screenshot2](data\screenshot2.png)
+![Screenshot](data/screenshot.png)
+![Screenshot2](data/screenshot2.png)
