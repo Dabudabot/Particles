@@ -133,9 +133,13 @@ bool particle::Game::process_event(SDL_Event& event)
     break;
   case SDL_KEYUP:
     // stop showing help
-    if (event.key.keysym.sym == SDLK_TAB)
+    switch (event.key.keysym.sym)
     {
+    case SDLK_TAB:
       show_help_ = false;
+      break;
+    default:
+      break;
     }
     break;
   default:
@@ -150,7 +154,8 @@ bool particle::Game::process_event(SDL_Event& event)
       switch(event.button.button)
       {
       case SDL_BUTTON_LEFT:
-        wall_host_->end_wall(event.button.x, event.button.y, 
+        wall_host_->end_wall(
+          event.button.x, event.button.y, 
           screen_->screen_width, screen_->screen_height);
         wall_building_ = false;
         break;
@@ -163,7 +168,8 @@ bool particle::Game::process_event(SDL_Event& event)
     }
     else if(SDL_MOUSEMOTION == event.type)
     {
-      wall_host_->move_wall(screen_, event.button.x, event.button.y, 
+      wall_host_->move_wall(screen_, 
+        event.button.x, event.button.y, 
         screen_->screen_width, screen_->screen_height);
     }
   }

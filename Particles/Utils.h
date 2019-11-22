@@ -113,4 +113,37 @@ namespace particle
   {
     return generate_color<T8, T32>(gray, gray, gray, gray);
   }
+
+  template<class T>
+  void to_polar(
+    const T sx, const T sy, 
+    const T x, const T y, 
+    T& dir, T& rad)
+  {
+    auto rx = x - sx;
+    auto ry = sy - y;
+    rad = static_cast<T>(sqrt(rx * rx + ry * ry));
+    dir = static_cast<T>(atan2(ry, rx) * 180 / M_PI);
+  }
+
+  template<class T>
+  void to_cart(
+    const T sx, const T sy, 
+    T& x, T& y, const T dir, 
+    const T x_rad, const T y_rad)
+  {
+    to_cart(x, y, dir, x_rad, y_rad);
+
+    x = sx + x;
+    y = sy - y;
+  }
+
+  template<class T>
+  void to_cart(
+    T& x, T& y, const T dir,
+    const T x_rad, const T y_rad)
+  {
+    x = static_cast<T>(x_rad * cos(dir));
+    y = static_cast<T>(y_rad * sin(dir));
+  }
 }

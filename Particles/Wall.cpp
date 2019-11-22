@@ -36,8 +36,13 @@ void particle::Wall::calc_abc()
   c_ = coordinates_.start.x * coordinates_.end.y - coordinates_.end.x * coordinates_.start.y;
 }
 
-void particle::Wall::move_end(const int x, const int y, const int max_x, const int max_y)
+void particle::Wall::move_end(
+  const int start_x, const int start_y,
+  int x, int y, 
+  const int max_x, const int max_y)
 {
+  
+
   coordinates_.end.x = Screen::to_relative(x, max_x);
   coordinates_.end.y = Screen::to_relative(y, max_y);
 
@@ -173,7 +178,10 @@ void particle::WallHost::move_wall(
   const int x, const int y, 
   const int max_x, const int max_y) const
 {
-  active_wall_->move_end(x, y, max_x, max_y);
+  active_wall_->move_end(
+    active_wall_->get_coordinates()->start.x, 
+    active_wall_->get_coordinates()->start.y, 
+    x, y, max_x, max_y);
   active_wall_->draw_wall(screen, false, max_x, max_y);
 }
 
@@ -181,7 +189,10 @@ void particle::WallHost::end_wall(
   const int x, const int y,
   const int max_x, const int max_y)
 {
-  active_wall_->move_end(x, y, max_x, max_y);
+  active_wall_->move_end(
+    active_wall_->get_coordinates()->start.x,
+    active_wall_->get_coordinates()->start.y, 
+    x, y, max_x, max_y);
   walls_.push_back(active_wall_);
   active_wall_ = nullptr;
 }

@@ -142,12 +142,14 @@ namespace particle
 
     /**
      * \brief move end point of the wall
+     * \param start_x center of the wall x
+     * \param start_y center of the wall y
      * \param x width coordinates of the end of the wall
      * \param y height coordinates of the end of the wall
      * \param max_x max width coordinates of the end of the wall
      * \param max_y max height coordinates of the end of the wall
      */
-    void move_end(int x, int y, int max_x, int max_y);
+    void move_end(int start_x, int start_y, int x, int y, int max_x, int max_y);
     /**
      * \brief draw wall on the screen with fade
      * \param screen screen to draw
@@ -219,7 +221,10 @@ namespace particle
      * \param max_x max absolute end width coordinate of the wall
      * \param max_y max absolute end height coordinate of the wall
      */
-    void move_wall(const std::shared_ptr<Screen>& screen, int x, int y, int max_x, int max_y) const;
+    void move_wall(
+      const std::shared_ptr<Screen>& screen, 
+      int x, int y, 
+      int max_x, int max_y) const;
     /**
      * \brief finish wall
      * \param x absolute end width coordinate of the wall
@@ -227,7 +232,9 @@ namespace particle
      * \param max_x max absolute end width coordinate of the wall
      * \param max_y max absolute end height coordinate of the wall
      */
-    void end_wall(int x, int y, int max_x, int max_y);
+    void end_wall(
+      int x, int y, 
+      int max_x, int max_y);
     /**
      * \brief is line intersect with any wall in container
      * \param old_x relative width coordinate start of the line

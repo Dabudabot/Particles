@@ -181,6 +181,7 @@ bool particle::Screen::init()
     return false;
   }
 
+#if 0
 	//create window
 	window_ = SDL_CreateWindow(
 		"Particles",
@@ -189,6 +190,15 @@ bool particle::Screen::init()
 		screen_width,
 		screen_height,
     SDL_WINDOW_FULLSCREEN_DESKTOP);
+#else//create window
+  window_ = SDL_CreateWindow(
+    "Particles",
+    SDL_WINDOWPOS_UNDEFINED,
+    SDL_WINDOWPOS_UNDEFINED,
+    1000,
+    600,
+    SDL_WINDOW_SHOWN);
+#endif
 
   SDL_GetWindowSize(window_, &screen_width, &screen_height);
 

@@ -49,8 +49,14 @@ void particle::Particle::update(
   if (fixed_speed > 0.1) {
     fixed_speed = 0.1;
   }
-  auto x_result = rel_x + fixed_speed * x_fix * cos(dir_);
-  auto y_result = rel_y + fixed_speed * sin(dir_);
+
+  auto x_result = 0.0;
+  auto y_result = 0.0;
+
+  to_cart(x_result, y_result, dir_, fixed_speed * x_fix, fixed_speed);
+
+  x_result += rel_x;
+  y_result += rel_y;
 
   auto ttl = 100;
 
@@ -72,8 +78,11 @@ void particle::Particle::update(
     speed_ = acceleration_ * (((1.0 * rand()) / RAND_MAX) + 0.2);
     fixed_speed = speed_ * interval;
     dir_ = (2 * M_PI * rand()) / RAND_MAX;
-    x_result = rel_x + fixed_speed * x_fix * cos(dir_);
-    y_result = rel_y + fixed_speed * sin(dir_);
+
+    to_cart(x_result, y_result, dir_, fixed_speed * x_fix, fixed_speed);
+
+    x_result += rel_x;
+    y_result += rel_y;
   }
 
   point_.x = x_result;
