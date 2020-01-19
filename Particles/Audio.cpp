@@ -134,6 +134,7 @@ bool particle::Audio::play_sound(
   const auto index = (SOUNDS_AMOUNT - 1) - (SOUNDS_AMOUNT - 1) * y / max_y;
   const auto sound = sounds_[index];
 
+
   if (Mix_PlayChannel(channel, sound, 0) == -1)
   {
     return false;

@@ -181,7 +181,7 @@ bool particle::Screen::init()
     return false;
   }
 
-#if 0
+#if 1
 	//create window
 	window_ = SDL_CreateWindow(
 		"Particles",

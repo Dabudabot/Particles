@@ -61,13 +61,15 @@ namespace particle {
 
     Uint8 current_file_;
 
+    Uint8 side_;
+
     std::vector<std::string> files;
 
     /**
      * \brief name of the quick save file
      */
-    const char* filename_ = "../saves/save.save";
-    const char* save_dir_ = "../saves";
+    std::string filename_;
+    const char* save_dir_ = "..\\saves";
 
     /**
      * \brief add help elements to the screen
@@ -112,15 +114,14 @@ namespace particle {
 
     /**
      * \brief open file for write and save walls position
-     * \param filename name of the save file
      */
-    void save(const char* filename) const;
+    void save();
 
     /**
      * \brief open file for read and get walls position,
      *        current walls are destroyed
      * \param filename name of the file to read
      */
-    void load(const char* filename);
+    void load(std::string& filename);
   };
 }

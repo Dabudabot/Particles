@@ -5,19 +5,24 @@
 #include "Game.h"
 #include <fstream>
 #include <filesystem>
+#include <string>
 
 particle::Game::Game()
 {
-  Game::restore_defaults();
   screen_ = std::make_shared<Screen>();
   audio_ = std::make_shared<Audio>();
-  running_ = true;
+
+  swarm_host_ = std::make_shared<SwarmHost>();
+  wall_host_ = std::make_shared<WallHost>();
   wall_building_ = false;
   show_help_ = false;
   is_autoplay_ = false;
-  help_fade_ = 0xff;
-  time_ = 0;
-  current_file_ = 0;
+  help_fade_ = 0x0;
+  time_ = 0x0;
+  current_file_ = 0x0;
+  filename_ = "../saves/save.save";
+  side_ = 0x0;
+  running_ = true;
   load_all();
 }
 
@@ -117,7 +122,7 @@ bool particle::Game::process_event(SDL_Event& event)
       break;
     case SDLK_F9:
       // quick save
-      save(filename_);
+      save();
       break;
     case SDLK_F10:
       // quick load
@@ -240,12 +245,25 @@ void particle::Game::restore_defaults()
   wall_host_ = std::make_shared<WallHost>();
   wall_building_ = false;
   show_help_ = false;
+
   help_fade_ = 0x0;
+  current_file_ = 0x0;
 }
 
-void particle::Game::save(const char* filename) const
+void particle::Game::save()
 {
   // open file, create if not exist
+  if (current_file_ >= 10) current_file_ = 0x0;
+  std::string filename;
+  filename += save_dir_;
+  filename.append("\\");
+  filename.append(std::to_string(current_file_));
+  filename.append(".save");
+
+  filename_ = filename;
+
+  current_file_++;
+
   std::ofstream file(filename, std::ios::out | std::ios::binary);
   if (!file) {
     return;
@@ -256,7 +274,7 @@ void particle::Game::save(const char* filename) const
   file.close();
 }
 
-void particle::Game::load(const char* filename)
+void particle::Game::load(std::string& filename)
 {
   restore_defaults();
 
@@ -273,18 +291,44 @@ void particle::Game::autoplay(const Uint32 elapsed)
   if (time_ == 0 || elapsed - time_ > 60000)
   {
     time_ = elapsed;
-    load(files[current_file_].c_str());
+    load(files[current_file_]);
     current_file_++;
     if (current_file_ >= files.size()) current_file_ = 0;
+    if (side_ >= 5) side_ = 0x0;
+    else side_++;
   }
 
   srand(elapsed);
-  const auto r = (rand() % 100) + 1;
+  const auto r = (rand() % 300) + 1;
 
   if (1 == r)
   {
-    const auto x = (rand() % screen_->screen_width) + 1;
-    const auto y = (rand() % screen_->screen_height) + 1;
+    int x;
+    int y;
+
+    switch(side_)
+    {
+    case 0:
+      x = (rand() % (screen_->screen_width / 2)) + 1;
+      y = (rand() % (screen_->screen_height / 2)) + 1;
+      break;
+    case 1:
+      x = (rand() % (screen_->screen_width / 2)) + (screen_->screen_width / 2);
+      y = (rand() % (screen_->screen_height / 2)) + 1;
+      break;
+    case 2:
+      x = (rand() % (screen_->screen_width / 2)) + (screen_->screen_width / 2);
+      y = (rand() % (screen_->screen_height / 2)) + (screen_->screen_height / 2);
+      break;
+    case 3:
+      x = (rand() % (screen_->screen_width / 2)) + 1;
+      y = (rand() % (screen_->screen_height / 2)) + (screen_->screen_height / 2);
+      break;
+    default:
+      x = (rand() % screen_->screen_width) + 1;
+      y = (rand() % screen_->screen_height) + 1;
+      break;
+    }
 
     swarm_host_->generate_swarm(
       x, 
