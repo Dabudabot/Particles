@@ -42,6 +42,8 @@ int particle::Game::run()
   // ReSharper disable once CppExpressionWithoutSideEffects
   audio_->play_music();
 
+  SDL_ShowCursor(0);
+
   // until game run do loop
   while (running_)
   {
@@ -75,7 +77,12 @@ int particle::Game::run()
     screen_->motion_blur();
 
     // draw walls if required
-    wall_host_->draw_walls(screen_, !show_help_, screen_->screen_width, screen_->screen_height);
+    wall_host_->draw_walls(
+      screen_, 
+      !show_help_, 
+      screen_->screen_width, 
+      screen_->screen_height
+    );
 
     // process clicks
     SDL_Event event;
@@ -224,11 +231,13 @@ void particle::Game::draw_help()
 {
   if (help_fade_ == 0 && !show_help_)
   {
+    SDL_ShowCursor(0);
     return;
   }
 
   if (show_help_)
   {
+    SDL_ShowCursor(1);
     help_fade_ = 0xff;
   }
   else
