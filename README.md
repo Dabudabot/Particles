@@ -28,3 +28,13 @@ rmb - explode particles
 
 ![Screenshot](data/screenshot.png)
 ![Screenshot2](data/screenshot2.png)
+
+## Links to SDL
+
+You have to download and put required libs to SDL folder of the project
+
+https://www.libsdl.org/projects/SDL_mixer/
+
+https://www.libsdl.org/projects/SDL_ttf/
+
+https://www.libsdl.org/download-2.0.php
